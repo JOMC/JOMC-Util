@@ -459,7 +459,7 @@ public final class WeakIdentityHashMap implements Map
      * @throws NullPointerException if {@code map} is {@code null}, or if
      * {@code map} contains {@code null} keys or values.
      */
-    public final void putAll( final Map m )
+    public void putAll( final Map m )
     {
         if ( m == null )
         {

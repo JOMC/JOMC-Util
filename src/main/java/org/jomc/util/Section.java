@@ -53,10 +53,10 @@ public class Section
     private int level;
 
     /** The parsed head content of this section. */
-    private Map<Integer, StringBuffer> headContent;
+    private Map<Integer, StringBuilder> headContent;
 
     /** The parsed tail content of this section. */
-    private Map<Integer, StringBuffer> tailContent;
+    private Map<Integer, StringBuilder> tailContent;
 
     /** Line marking the start of this section. */
     private Map<Integer, String> startingLine;
@@ -66,6 +66,12 @@ public class Section
 
     /** The child sections of this section. */
     private Map<Integer, List<Section>> children;
+
+    /** Creates a new {@code Section} instance. */
+    public Section()
+    {
+        super();
+    }
 
     /**
      * Gets the name of this section.
@@ -152,17 +158,17 @@ public class Section
      *
      * @return The parsed head content of this section.
      */
-    public StringBuffer getHeadContent()
+    public StringBuilder getHeadContent()
     {
         if ( this.headContent == null )
         {
-            this.headContent = new HashMap<Integer, StringBuffer>();
+            this.headContent = new HashMap<Integer, StringBuilder>();
         }
 
-        StringBuffer b = this.headContent.get( this.level );
+        StringBuilder b = this.headContent.get( this.level );
         if ( b == null )
         {
-            b = new StringBuffer();
+            b = new StringBuilder();
             this.headContent.put( this.level, b );
         }
 
@@ -174,17 +180,17 @@ public class Section
      *
      * @return The parsed tail content of this section.
      */
-    public StringBuffer getTailContent()
+    public StringBuilder getTailContent()
     {
         if ( this.tailContent == null )
         {
-            this.tailContent = new HashMap<Integer, StringBuffer>();
+            this.tailContent = new HashMap<Integer, StringBuilder>();
         }
 
-        StringBuffer b = this.tailContent.get( this.level );
+        StringBuilder b = this.tailContent.get( this.level );
         if ( b == null )
         {
-            b = new StringBuffer();
+            b = new StringBuilder();
             this.tailContent.put( this.level, b );
         }
 
@@ -192,11 +198,90 @@ public class Section
     }
 
     /**
+     * Gets all sections recursively.
+     *
+     * @return A list of all sections collected recursively.
+     */
+    public List<Section> getSections()
+    {
+        return collectSections( this, new LinkedList<Section>() );
+    }
+
+    /** Constant for the mode when parsing the head of a section. */
+    static final int MODE_HEAD = 1;
+
+    /** Constant for the mode when parsing the tail of a section. */
+    static final int MODE_TAIL = 2;
+
+    /** The current parsing mode. */
+    private int mode = MODE_HEAD;
+
+    /**
+     * Gets the level of the section.
+     *
+     * @return The level of the section.
+     */
+    int getLevel()
+    {
+        return this.level;
+    }
+
+    /**
+     * Sets the level of the section.
+     *
+     * @param value The new level of the section.
+     */
+    void setLevel( final int value )
+    {
+        this.level = value;
+    }
+
+    /**
+     * Gets the mode of the section.
+     *
+     * @return The mode of the section.
+     */
+    int getMode()
+    {
+        return this.mode;
+    }
+
+    /**
+     * Sets the mode of the section.
+     *
+     * @param value The new mode of the section.
+     */
+    void setMode( final int value )
+    {
+        this.mode = value;
+    }
+
+    /**
+     * Adds content to the section.
+     *
+     * @param content The content to add.
+     *
+     * @see #getMode()
+     * @see #getLevel()
+     */
+    void addContent( final String content )
+    {
+        if ( this.mode == MODE_HEAD )
+        {
+            this.getHeadContent().append( content );
+        }
+        else if ( this.mode == MODE_TAIL )
+        {
+            this.getTailContent().append( content );
+        }
+    }
+
+    /**
      * Gets the child sections of this section.
      *
      * @return The child sections of this section.
      */
-    public List<Section> getChildren()
+    List<Section> getChildren()
     {
         if ( this.children == null )
         {
@@ -214,77 +299,27 @@ public class Section
     }
 
     /**
-     * Gets all sections recursively.
+     * Collects sections recursively.
      *
-     * @return A list of all sections collected recursively.
+     * @param section A section to collect child sections of.
+     * @param sections A list to add any child sections to.
+     *
+     * @return {@code sections} with any child sections of {@code section} added.
      */
-    public List<Section> getSections()
+    private static List<Section> collectSections( final Section section, final List<Section> sections )
     {
-        class RecursionHelper
+        sections.add( section );
+        final int l = section.getLevel();
+        for ( int i = 0; i <= l; i++ )
         {
-
-            void collect( final Section section, final List<Section> list )
+            section.setLevel( i );
+            for ( Section child : section.getChildren() )
             {
-                list.add( section );
-
-                final int l = section.getLevel();
-                for ( int i = 0; i <= l; i++ )
-                {
-                    section.setLevel( i );
-                    for ( Section child : section.getChildren() )
-                    {
-                        this.collect( child, list );
-                    }
-                }
-                section.setLevel( l );
+                collectSections( child, sections );
             }
-
         }
-
-        final List<Section> sections = new LinkedList<Section>();
-        new RecursionHelper().collect( this, sections );
+        section.setLevel( l );
         return sections;
-    }
-
-    /** Constant for the mode when parsing the head of a section. */
-    static final int MODE_HEAD = 1;
-
-    /** Constant for the mode when parsing the tail of a section. */
-    static final int MODE_TAIL = 2;
-
-    /** The current parsing mode. */
-    private int mode = MODE_HEAD;
-
-    int getLevel()
-    {
-        return this.level;
-    }
-
-    void setLevel( final int level )
-    {
-        this.level = level;
-    }
-
-    int getMode()
-    {
-        return this.mode;
-    }
-
-    void setMode( final int value )
-    {
-        this.mode = value;
-    }
-
-    void addContent( final String content )
-    {
-        if ( this.mode == MODE_HEAD )
-        {
-            this.getHeadContent().append( content );
-        }
-        else if ( this.mode == MODE_TAIL )
-        {
-            this.getTailContent().append( content );
-        }
     }
 
 }

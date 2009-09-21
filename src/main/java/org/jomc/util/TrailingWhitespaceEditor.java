@@ -37,14 +37,26 @@ package org.jomc.util;
  *
  * @author <a href="mailto:cs@jomc.org">Christian Schulte</a>
  * @version $Id$
+ *
+ * @see #edit(java.lang.String)
  */
-public class TrailingWhitespaceEditor extends LineEditor
+public final class TrailingWhitespaceEditor extends LineEditor
 {
 
     /** Creates a new {@code TrailingWhitespaceEditor} instance. */
     public TrailingWhitespaceEditor()
     {
         super();
+    }
+
+    /**
+     * Creates a new {@code TrailingWhitespaceEditor} instance taking a string to use for separating lines.
+     *
+     * @param lineSeparator String to use for separating lines.
+     */
+    public TrailingWhitespaceEditor( final String lineSeparator )
+    {
+        super( lineSeparator );
     }
 
     /**
@@ -57,14 +69,27 @@ public class TrailingWhitespaceEditor extends LineEditor
         super( editor );
     }
 
-    @Override
-    public String getNextLine( String line )
+    /**
+     * Creates a new {@code TrailingWhitespaceEditor} instance taking an editor to chain and a string to use for separating lines.
+     *
+     * @param editor The editor to chain.
+     * @param lineSeparator String to use for separating lines.
+     */
+    public TrailingWhitespaceEditor( final LineEditor editor, final String lineSeparator )
     {
+        super( editor, lineSeparator );
+    }
+
+    @Override
+    protected String editLine( final String line )
+    {
+        String replacement = line;
+
         if ( line != null )
         {
-            StringBuffer whitespace = null;
+            StringBuilder whitespace = null;
             boolean sawWhitespace = false;
-            final StringBuffer replacement = new StringBuffer( line.length() );
+            final StringBuilder buf = new StringBuilder( line.length() );
             final char[] chars = line.toCharArray();
 
             for ( int i = 0; i < chars.length; i++ )
@@ -73,7 +98,7 @@ public class TrailingWhitespaceEditor extends LineEditor
                 {
                     if ( whitespace == null )
                     {
-                        whitespace = new StringBuffer();
+                        whitespace = new StringBuilder();
                     }
 
                     whitespace.append( chars[i] );
@@ -83,22 +108,18 @@ public class TrailingWhitespaceEditor extends LineEditor
                 {
                     if ( sawWhitespace )
                     {
-                        replacement.append( whitespace );
+                        buf.append( whitespace );
                         sawWhitespace = false;
                         whitespace = null;
                     }
-                    replacement.append( chars[i] );
+                    buf.append( chars[i] );
                 }
             }
 
-            if ( !replacement.toString().equals( line ) )
-            {
-                this.setInputModified( true );
-                line = replacement.toString();
-            }
+            replacement = buf.toString();
         }
 
-        return line;
+        return replacement;
     }
 
 }

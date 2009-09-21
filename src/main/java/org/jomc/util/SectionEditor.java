@@ -38,20 +38,22 @@ import java.util.Stack;
  * Interface to section based editing.
  * <p>Section based editing is a two phase process of parsing the editor's input into a corresponding hierarchy of
  * {@code Section} instances, followed by rendering the parsed sections to produce the output of the editor. Method
- * {@code getNextLine} returns {@code null} during parsing and the output of the editor on end of input, rendered by
+ * {@code editLine} returns {@code null} during parsing and the output of the editor on end of input, rendered by
  * calling method {@code getOutput}. Parsing is backed by methods {@code getSection} and {@code isSectionFinished}.</p>
  *
  * @author <a href="mailto:cs@jomc.org">Christian Schulte</a>
  * @version $Id$
+ *
+ * @see #edit(java.lang.String)
  */
 public class SectionEditor extends LineEditor
 {
 
     /** Marker indicating the start of a section. */
-    private static String DEFAULT_SECTION_START = "SECTION-START[";
+    private static final String DEFAULT_SECTION_START = "SECTION-START[";
 
     /** Marker indicating the end of a section. */
-    private static String DEFAULT_SECTION_END = "SECTION-END";
+    private static final String DEFAULT_SECTION_END = "SECTION-END";
 
     /** Stack of sections. */
     private Stack<Section> stack;
@@ -60,6 +62,16 @@ public class SectionEditor extends LineEditor
     public SectionEditor()
     {
         super();
+    }
+
+    /**
+     * Creates a new {@code SectionEditor} instance taking a string to use for separating lines.
+     *
+     * @param lineSeparator String to use for separating lines.
+     */
+    public SectionEditor( final String lineSeparator )
+    {
+        super( lineSeparator );
     }
 
     /**
@@ -72,8 +84,19 @@ public class SectionEditor extends LineEditor
         super( editor );
     }
 
+    /**
+     * Creates a new {@code SectionEditor} instance taking an editor to chain and a string to use for separating lines.
+     *
+     * @param editor The editor to chain.
+     * @param lineSeparator String to use for separating lines.
+     */
+    public SectionEditor( final LineEditor editor, final String lineSeparator )
+    {
+        super( editor, lineSeparator );
+    }
+
     @Override
-    public final String getNextLine( String line )
+    protected final String editLine( final String line )
     {
         if ( this.stack == null )
         {
@@ -86,10 +109,11 @@ public class SectionEditor extends LineEditor
         }
 
         final Section current = this.stack.peek();
+        String replacement = null;
 
         if ( line != null )
         {
-            Section child = this.getSection( line );
+            final Section child = this.getSection( line );
             if ( child != null )
             {
                 child.setStartingLine( line );
@@ -101,7 +125,7 @@ public class SectionEditor extends LineEditor
                 }
                 else if ( current.getMode() == Section.MODE_TAIL )
                 {
-                    final StringBuffer tail = current.getTailContent();
+                    final StringBuilder tail = current.getTailContent();
                     current.setLevel( current.getLevel() + 1 );
                     current.getHeadContent().setLength( 0 );
                     current.getHeadContent().append( tail );
@@ -122,10 +146,8 @@ public class SectionEditor extends LineEditor
             }
             else
             {
-                current.addContent( line + "\n" );
+                current.addContent( line + this.getLineSeparator() );
             }
-
-            line = null;
         }
         else
         {
@@ -136,11 +158,11 @@ public class SectionEditor extends LineEditor
                 throw new IllegalArgumentException( root.getStartingLine() );
             }
 
-            line = this.getOutput( root );
+            replacement = this.getOutput( root );
             this.stack = null;
         }
 
-        return line;
+        return replacement;
     }
 
     /**
@@ -148,10 +170,10 @@ public class SectionEditor extends LineEditor
      *
      * @param line The line to parse.
      *
-     * @return The section starting at {@code line} or {@code null} if {@code line} does not mark the start of a new
+     * @return The section starting at {@code line} or {@code null} if {@code line} does not mark the start of a
      * section.
      */
-    public Section getSection( final String line )
+    protected Section getSection( final String line )
     {
         Section s = null;
 
@@ -179,7 +201,7 @@ public class SectionEditor extends LineEditor
      * @return {@code true} if {@code line} marks the end of a section; {@code false} if {@code line} does not mark the
      * end of a section.
      */
-    public boolean isSectionFinished( final String line )
+    protected boolean isSectionFinished( final String line )
     {
         boolean end = false;
 
@@ -204,49 +226,51 @@ public class SectionEditor extends LineEditor
      *
      * @see Section#getSections()
      */
-    public String getOutput( final Section root )
+    protected String getOutput( final Section root )
     {
         if ( root == null )
         {
             throw new NullPointerException( "root" );
         }
 
-        class RecursionHelper
+        return this.renderSections( root, new StringBuilder() ).toString();
+    }
+
+    /**
+     * Appends the content of a given section to a given buffer.
+     *
+     * @param section The section to render.
+     * @param buffer The buffer to append the content of {@code section} to.
+     *
+     * @return {@code buffer} with content of {@code section} appended.
+     */
+    private StringBuilder renderSections( final Section section, final StringBuilder buffer )
+    {
+        final int l = section.getLevel();
+        for ( int i = 0; i <= l; i++ )
         {
-
-            void render( final Section section, final StringBuffer buffer )
+            section.setLevel( i );
+            if ( section.getStartingLine() != null )
             {
-                final int l = section.getLevel();
-                for ( int i = 0; i <= l; i++ )
-                {
-                    section.setLevel( i );
-                    if ( section.getStartingLine() != null )
-                    {
-                        buffer.append( section.getStartingLine() ).append( "\n" );
-                    }
-
-                    buffer.append( section.getHeadContent() );
-
-                    for ( Section child : section.getChildren() )
-                    {
-                        this.render( child, buffer );
-                    }
-
-                    buffer.append( section.getTailContent() );
-
-                    if ( section.getEndingLine() != null )
-                    {
-                        buffer.append( section.getEndingLine() ).append( "\n" );
-                    }
-                }
-                section.setLevel( l );
+                buffer.append( section.getStartingLine() ).append( this.getLineSeparator() );
             }
 
-        }
+            buffer.append( section.getHeadContent() );
 
-        final StringBuffer output = new StringBuffer();
-        new RecursionHelper().render( root, output );
-        return output.toString();
+            for ( Section child : section.getChildren() )
+            {
+                renderSections( child, buffer );
+            }
+
+            buffer.append( section.getTailContent() );
+
+            if ( section.getEndingLine() != null )
+            {
+                buffer.append( section.getEndingLine() ).append( this.getLineSeparator() );
+            }
+        }
+        section.setLevel( l );
+        return buffer;
     }
 
 }

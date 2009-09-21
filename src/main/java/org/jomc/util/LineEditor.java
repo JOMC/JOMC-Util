@@ -110,11 +110,9 @@ public class LineEditor
     }
 
     /**
-     * Edits texts.
+     * Edits text.
      * <p>This method splits the given string into lines and passes every line to method {@code editLine} in order of
-     * occurrence. On end of input, method {@code editLine} is called with a {@code null} argument. If any line has been
-     * edited, the {@code inputModified} flag will be set to {@code true}, otherwise the {@code inputModified} flag will
-     * be set to {@code false}.</p>
+     * occurrence. On end of input, method {@code editLine} is called with a {@code null} argument.</p>
      *
      * @param text The text to edit or {@code null}.
      *

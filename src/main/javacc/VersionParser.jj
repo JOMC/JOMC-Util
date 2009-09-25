@@ -101,7 +101,7 @@ public final class VersionParser
   /**
    * Parses the input to produce an array of tokens.
    *
-   * @return the parsed tokens.
+   * @return The parsed tokens.
    *
    * @throws ParseException if the parse fails.
    * @throws TokenMgrError for any invalid tokens.
@@ -116,10 +116,10 @@ public final class VersionParser
    * <p>This method parses the given strings to produce a sequence of tokens
    * and then compares these tokens for order.</p>
    *
-   * @param v1 the version to compare with.
-   * @param v2 the version to compare to.
+   * @param v1 The version to compare with.
+   * @param v2 The version to compare to.
    *
-   * @return a negative integer, zero, or a positive integer as the first
+   * @return A negative integer, zero, or a positive integer as the first
    * version is less than, equal to, or greater than the second.
    *
    * @throws NullPointerException if {@code v1} or {@code v2} is {@code null}.

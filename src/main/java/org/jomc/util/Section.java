@@ -51,7 +51,7 @@ public class Section
     static final int MODE_TAIL = 2;
 
     /** The current parsing mode. */
-    int mode = MODE_HEAD;
+    private int mode = MODE_HEAD;
 
     /** The name of this section. */
     private String name;
@@ -180,6 +180,32 @@ public class Section
         }
 
         return this.sections;
+    }
+
+    /**
+     * Gets the parsing mode of the instance.
+     *
+     * @return The parsing mode of the instance.
+     *
+     * @see #MODE_HEAD
+     * @see #MODE_TAIL
+     */
+    int getMode()
+    {
+        return this.mode;
+    }
+
+    /**
+     * Sets the parsing mode of the instance.
+     *
+     * @param value The new parsing mode of the instance.
+     *
+     * @see #MODE_HEAD
+     * @see #MODE_TAIL
+     */
+    void setMode( final int value )
+    {
+        this.mode = value;
     }
 
 }

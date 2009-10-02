@@ -104,7 +104,7 @@ public class SectionEditor extends LineEditor
         if ( this.stack == null )
         {
             final Section root = new Section();
-            root.mode = Section.MODE_HEAD;
+            root.setMode( Section.MODE_HEAD );
             this.stack = new Stack<Section>();
             this.stack.push( root );
         }
@@ -119,9 +119,9 @@ public class SectionEditor extends LineEditor
             if ( child != null )
             {
                 child.setStartingLine( line );
-                child.mode = Section.MODE_HEAD;
+                child.setMode( Section.MODE_HEAD );
 
-                if ( current.mode == Section.MODE_TAIL && current.getTailContent().length() > 0 )
+                if ( current.getMode() == Section.MODE_TAIL && current.getTailContent().length() > 0 )
                 {
                     final Section s = new Section();
                     s.getHeadContent().append( current.getTailContent() );
@@ -132,7 +132,7 @@ public class SectionEditor extends LineEditor
                 }
 
                 current.getSections().add( child );
-                current.mode = Section.MODE_TAIL;
+                current.setMode( Section.MODE_TAIL );
                 this.stack.push( child );
             }
             else if ( this.isSectionFinished( line ) )
@@ -145,13 +145,19 @@ public class SectionEditor extends LineEditor
             }
             else
             {
-                if ( current.mode == Section.MODE_HEAD )
+                switch ( current.getMode() )
                 {
-                    current.getHeadContent().append( line ).append( this.getLineSeparator() );
-                }
-                else if ( current.mode == Section.MODE_TAIL )
-                {
-                    current.getTailContent().append( line ).append( this.getLineSeparator() );
+                    case Section.MODE_HEAD:
+                        current.getHeadContent().append( line ).append( this.getLineSeparator() );
+                        break;
+
+                    case Section.MODE_TAIL:
+                        current.getTailContent().append( line ).append( this.getLineSeparator() );
+                        break;
+
+                    default:
+                        throw new AssertionError( current.getMode() );
+
                 }
             }
         }
@@ -261,7 +267,7 @@ public class SectionEditor extends LineEditor
      * Gets the output of the editor.
      * <p>This method calls method {@code editSection()} for each section of the editor prior to rendering the sections
      * to produce the output of the editor.</p>
-     * 
+     *
      * @param section The section to start rendering the editor's output with.
      *
      * @return The output of the editor.

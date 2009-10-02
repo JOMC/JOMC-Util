@@ -99,7 +99,7 @@ public class LineEditor
      *
      * @return The line separator of the editor.
      */
-    protected final String getLineSeparator()
+    public final String getLineSeparator()
     {
         if ( this.lineSeparator == null )
         {
@@ -117,44 +117,39 @@ public class LineEditor
      * @param text The text to edit or {@code null}.
      *
      * @return The edited text or {@code null}.
+     *
+     * @throws IOException if editing fails.
      */
-    public final String edit( final String text )
+    public final String edit( final String text ) throws IOException
     {
         String edited = text;
 
         if ( text != null )
         {
-            try
+            final BufferedReader reader = new BufferedReader( new StringReader( text ) );
+            final StringBuilder buf = new StringBuilder();
+
+            String line = null;
+            while ( ( line = reader.readLine() ) != null )
             {
-                final BufferedReader reader = new BufferedReader( new StringReader( text ) );
-                final StringBuilder buf = new StringBuilder();
-
-                String line = null;
-                while ( ( line = reader.readLine() ) != null )
-                {
-                    final String replacement = this.editLine( line );
-                    if ( replacement != null )
-                    {
-                        buf.append( replacement ).append( this.getLineSeparator() );
-                    }
-                }
-
-                final String replacement = this.editLine( null );
+                final String replacement = this.editLine( line );
                 if ( replacement != null )
                 {
-                    buf.append( replacement );
-                }
-
-                edited = buf.toString();
-
-                if ( this.editor != null )
-                {
-                    edited = this.editor.edit( edited );
+                    buf.append( replacement ).append( this.getLineSeparator() );
                 }
             }
-            catch ( final IOException e )
+
+            final String replacement = this.editLine( null );
+            if ( replacement != null )
             {
-                throw new AssertionError( e );
+                buf.append( replacement );
+            }
+
+            edited = buf.toString();
+
+            if ( this.editor != null )
+            {
+                edited = this.editor.edit( edited );
             }
         }
 
@@ -167,8 +162,10 @@ public class LineEditor
      * @param line The line to edit or {@code null} indicating the end of input.
      *
      * @return The string to replace {@code line} with, or {@code null} to replace {@code line} with nothing.
+     *
+     * @throws IOException if editing fails.
      */
-    protected String editLine( final String line )
+    protected String editLine( final String line ) throws IOException
     {
         return line;
     }

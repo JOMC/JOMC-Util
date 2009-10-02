@@ -32,6 +32,9 @@
  */
 package org.jomc.util;
 
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
 import java.util.Stack;
 
 /**
@@ -96,57 +99,60 @@ public class SectionEditor extends LineEditor
     }
 
     @Override
-    protected final String editLine( final String line )
+    protected final String editLine( final String line ) throws IOException
     {
         if ( this.stack == null )
         {
             final Section root = new Section();
-            root.setName( this.getClass().getName() );
-            root.setMode( Section.MODE_HEAD );
-
+            root.mode = Section.MODE_HEAD;
             this.stack = new Stack<Section>();
             this.stack.push( root );
         }
 
-        final Section current = this.stack.peek();
+        Section current = this.stack.peek();
         String replacement = null;
 
         if ( line != null )
         {
             final Section child = this.getSection( line );
+
             if ( child != null )
             {
                 child.setStartingLine( line );
-                child.setMode( Section.MODE_HEAD );
+                child.mode = Section.MODE_HEAD;
 
-                if ( current.getMode() == Section.MODE_HEAD )
+                if ( current.mode == Section.MODE_TAIL && current.getTailContent().length() > 0 )
                 {
-                    current.setMode( Section.MODE_TAIL );
-                }
-                else if ( current.getMode() == Section.MODE_TAIL )
-                {
-                    final StringBuilder tail = current.getTailContent();
-                    current.setLevel( current.getLevel() + 1 );
-                    current.getHeadContent().setLength( 0 );
-                    current.getHeadContent().append( tail );
-                    tail.setLength( 0 );
-                }
-                else
-                {
-                    throw new AssertionError();
+                    final Section s = new Section();
+                    s.getHeadContent().append( current.getTailContent() );
+                    current.getTailContent().setLength( 0 );
+                    current.getSections().add( s );
+                    current = s;
+                    this.stack.push( current );
                 }
 
-                current.getChildren().add( child );
-
+                current.getSections().add( child );
+                current.mode = Section.MODE_TAIL;
                 this.stack.push( child );
             }
             else if ( this.isSectionFinished( line ) )
             {
                 this.stack.pop().setEndingLine( line );
+                if ( this.stack.peek().getName() == null && this.stack.size() > 1 )
+                {
+                    this.stack.pop();
+                }
             }
             else
             {
-                current.addContent( line + this.getLineSeparator() );
+                if ( current.mode == Section.MODE_HEAD )
+                {
+                    current.getHeadContent().append( line ).append( this.getLineSeparator() );
+                }
+                else if ( current.mode == Section.MODE_TAIL )
+                {
+                    current.getTailContent().append( line ).append( this.getLineSeparator() );
+                }
             }
         }
         else
@@ -155,7 +161,12 @@ public class SectionEditor extends LineEditor
 
             if ( !this.stack.isEmpty() )
             {
-                throw new IllegalArgumentException( root.getStartingLine() );
+                this.stack = null;
+                throw new IOException( this.getMessage( "unexpectedEndOfSection", new Object[]
+                    {
+                        root.getName() == null ? "/" : root.getName()
+                    } ) );
+
             }
 
             replacement = this.getOutput( root );
@@ -203,37 +214,70 @@ public class SectionEditor extends LineEditor
      */
     protected boolean isSectionFinished( final String line )
     {
-        boolean end = false;
+        return line != null && line.indexOf( DEFAULT_SECTION_END ) != -1;
+    }
 
-        if ( line != null )
+    /**
+     * Edits a section.
+     * <p>This method does not change any content by default. Overriding classes may use this method for editing
+     * sections prior to rendering.</p>
+     *
+     * @param section The section to edit.
+     *
+     * @throws NullPointerException if {@code section} is {@code null}.
+     * @throws IOException if editing fails.
+     */
+    protected void editSection( final Section section ) throws IOException
+    {
+        if ( section == null )
         {
-            end = line.indexOf( DEFAULT_SECTION_END ) != -1;
+            throw new NullPointerException( "section" );
+        }
+    }
+
+    /**
+     * Edits a section recursively.
+     *
+     * @param section The section to edit recursively.
+     *
+     * @throws NullPointerException if {@code section} is {@code null}.
+     * @throws IOException if editing fails.
+     */
+    private void editSections( final Section section ) throws IOException
+    {
+        if ( section == null )
+        {
+            throw new NullPointerException( "section" );
         }
 
-        return end;
+        this.editSection( section );
+        for ( Section child : section.getSections() )
+        {
+            this.editSections( child );
+        }
     }
 
     /**
      * Gets the output of the editor.
-     * <p>This method returns the unchanged input by rendering the given sections. Overwriting classes may call this
-     * method after having updated the given sections for rendering edited content.</p>
-     *
-     * @param root The root of the parsed sections to render the editor's output with.
+     * <p>This method calls method {@code editSection()} for each section of the editor prior to rendering the sections
+     * to produce the output of the editor.</p>
+     * 
+     * @param section The section to start rendering the editor's output with.
      *
      * @return The output of the editor.
      *
-     * @throws NullPointerException if {@code root} is {@code null}.
-     *
-     * @see Section#getSections()
+     * @throws NullPointerException if {@code section} is {@code null}.
+     * @throws IOException if editing or rendering fails.
      */
-    protected String getOutput( final Section root )
+    protected String getOutput( final Section section ) throws IOException
     {
-        if ( root == null )
+        if ( section == null )
         {
-            throw new NullPointerException( "root" );
+            throw new NullPointerException( "section" );
         }
 
-        return this.renderSections( root, new StringBuilder() ).toString();
+        this.editSections( section );
+        return this.renderSections( section, new StringBuilder() ).toString();
     }
 
     /**
@@ -246,31 +290,33 @@ public class SectionEditor extends LineEditor
      */
     private StringBuilder renderSections( final Section section, final StringBuilder buffer )
     {
-        final int l = section.getLevel();
-        for ( int i = 0; i <= l; i++ )
+        if ( section.getStartingLine() != null )
         {
-            section.setLevel( i );
-            if ( section.getStartingLine() != null )
-            {
-                buffer.append( section.getStartingLine() ).append( this.getLineSeparator() );
-            }
-
-            buffer.append( section.getHeadContent() );
-
-            for ( Section child : section.getChildren() )
-            {
-                renderSections( child, buffer );
-            }
-
-            buffer.append( section.getTailContent() );
-
-            if ( section.getEndingLine() != null )
-            {
-                buffer.append( section.getEndingLine() ).append( this.getLineSeparator() );
-            }
+            buffer.append( section.getStartingLine() ).append( this.getLineSeparator() );
         }
-        section.setLevel( l );
+
+        buffer.append( section.getHeadContent() );
+
+        for ( Section child : section.getSections() )
+        {
+            this.renderSections( child, buffer );
+        }
+
+        buffer.append( section.getTailContent() );
+
+        if ( section.getEndingLine() != null )
+        {
+            buffer.append( section.getEndingLine() ).append( this.getLineSeparator() );
+        }
+
         return buffer;
+    }
+
+    private String getMessage( final String key, final Object arguments )
+    {
+        return new MessageFormat( ResourceBundle.getBundle( SectionEditor.class.getName().
+            replace( '.', '/' ) ).getString( key ) ).format( arguments );
+
     }
 
 }

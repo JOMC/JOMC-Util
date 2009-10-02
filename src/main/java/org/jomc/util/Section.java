@@ -32,10 +32,8 @@
  */
 package org.jomc.util;
 
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Section of text.
@@ -46,26 +44,32 @@ import java.util.Map;
 public class Section
 {
 
+    /** Constant for the mode during parsing the head content of a section. */
+    static final int MODE_HEAD = 1;
+
+    /** Constant for the mode during parsing the tail content of a section. */
+    static final int MODE_TAIL = 2;
+
+    /** The current parsing mode. */
+    int mode = MODE_HEAD;
+
     /** The name of this section. */
     private String name;
 
-    /** The level of this section. */
-    private int level;
-
     /** The parsed head content of this section. */
-    private Map<Integer, StringBuilder> headContent;
+    private StringBuilder headContent;
 
     /** The parsed tail content of this section. */
-    private Map<Integer, StringBuilder> tailContent;
+    private StringBuilder tailContent;
 
     /** Line marking the start of this section. */
-    private Map<Integer, String> startingLine;
+    private String startingLine;
 
     /** Line marking the end of this section. */
-    private Map<Integer, String> endingLine;
+    private String endingLine;
 
     /** The child sections of this section. */
-    private Map<Integer, List<Section>> children;
+    private List<Section> sections;
 
     /** Creates a new {@code Section} instance. */
     public Section()
@@ -76,7 +80,7 @@ public class Section
     /**
      * Gets the name of this section.
      *
-     * @return The name of this section.
+     * @return The name of this section or {@code null}.
      */
     public String getName()
     {
@@ -86,7 +90,7 @@ public class Section
     /**
      * Sets the name of this section.
      *
-     * @param value The name of this section.
+     * @param value The new name of this section or {@code null}.
      */
     public void setName( final String value )
     {
@@ -100,27 +104,17 @@ public class Section
      */
     public String getStartingLine()
     {
-        if ( this.startingLine == null )
-        {
-            this.startingLine = new HashMap<Integer, String>();
-        }
-
-        return this.startingLine.get( this.level );
+        return this.startingLine;
     }
 
     /**
      * Sets the line marking the start of this section.
      *
-     * @param value The line marking the start of this section.
+     * @param value The new line marking the start of this section.
      */
     public void setStartingLine( final String value )
     {
-        if ( this.startingLine == null )
-        {
-            this.startingLine = new HashMap<Integer, String>();
-        }
-
-        this.startingLine.put( this.level, value );
+        this.startingLine = value;
     }
 
     /**
@@ -130,196 +124,62 @@ public class Section
      */
     public String getEndingLine()
     {
-        if ( this.endingLine == null )
-        {
-            this.endingLine = new HashMap<Integer, String>();
-        }
-
-        return this.endingLine.get( this.level );
+        return this.endingLine;
     }
 
     /**
      * Sets the line marking the end of this section.
      *
-     * @param value The line marking the end of this section.
+     * @param value The new line marking the end of this section.
      */
     public void setEndingLine( final String value )
     {
-        if ( this.endingLine == null )
-        {
-            this.endingLine = new HashMap<Integer, String>();
-        }
-
-        this.endingLine.put( this.level, value );
+        this.endingLine = value;
     }
 
     /**
-     * Gets the parsed head content of this section.
+     * Gets the content of this section preceding any child section content.
      *
-     * @return The parsed head content of this section.
+     * @return The content of this section preceding any child section content.
      */
     public StringBuilder getHeadContent()
     {
         if ( this.headContent == null )
         {
-            this.headContent = new HashMap<Integer, StringBuilder>();
+            this.headContent = new StringBuilder();
         }
 
-        StringBuilder b = this.headContent.get( this.level );
-        if ( b == null )
-        {
-            b = new StringBuilder();
-            this.headContent.put( this.level, b );
-        }
-
-        return b;
+        return this.headContent;
     }
 
     /**
-     * Gets the parsed tail content of this section.
+     * Gets the content of this section succeeding any child section content.
      *
-     * @return The parsed tail content of this section.
+     * @return The content of this section succeeding any child section content.
      */
     public StringBuilder getTailContent()
     {
         if ( this.tailContent == null )
         {
-            this.tailContent = new HashMap<Integer, StringBuilder>();
+            this.tailContent = new StringBuilder();
         }
 
-        StringBuilder b = this.tailContent.get( this.level );
-        if ( b == null )
-        {
-            b = new StringBuilder();
-            this.tailContent.put( this.level, b );
-        }
-
-        return b;
-    }
-
-    /**
-     * Gets all sections recursively.
-     *
-     * @return A list of all sections collected recursively.
-     */
-    public List<Section> getSections()
-    {
-        return collectSections( this, new LinkedList<Section>() );
-    }
-
-    /** Constant for the mode when parsing the head of a section. */
-    static final int MODE_HEAD = 1;
-
-    /** Constant for the mode when parsing the tail of a section. */
-    static final int MODE_TAIL = 2;
-
-    /** The current parsing mode. */
-    private int mode = MODE_HEAD;
-
-    /**
-     * Gets the level of the section.
-     *
-     * @return The level of the section.
-     */
-    int getLevel()
-    {
-        return this.level;
-    }
-
-    /**
-     * Sets the level of the section.
-     *
-     * @param value The new level of the section.
-     */
-    void setLevel( final int value )
-    {
-        this.level = value;
-    }
-
-    /**
-     * Gets the mode of the section.
-     *
-     * @return The mode of the section.
-     */
-    int getMode()
-    {
-        return this.mode;
-    }
-
-    /**
-     * Sets the mode of the section.
-     *
-     * @param value The new mode of the section.
-     */
-    void setMode( final int value )
-    {
-        this.mode = value;
-    }
-
-    /**
-     * Adds content to the section.
-     *
-     * @param content The content to add.
-     *
-     * @see #getMode()
-     * @see #getLevel()
-     */
-    void addContent( final String content )
-    {
-        if ( this.mode == MODE_HEAD )
-        {
-            this.getHeadContent().append( content );
-        }
-        else if ( this.mode == MODE_TAIL )
-        {
-            this.getTailContent().append( content );
-        }
+        return this.tailContent;
     }
 
     /**
      * Gets the child sections of this section.
      *
-     * @return The child sections of this section.
+     * @return A list of child sections of this section.
      */
-    List<Section> getChildren()
+    public List<Section> getSections()
     {
-        if ( this.children == null )
+        if ( this.sections == null )
         {
-            this.children = new HashMap<Integer, List<Section>>();
+            this.sections = new ArrayList<Section>();
         }
 
-        List<Section> c = this.children.get( this.level );
-        if ( c == null )
-        {
-            c = new LinkedList<Section>();
-            this.children.put( this.level, c );
-        }
-
-        return c;
-    }
-
-    /**
-     * Collects sections recursively.
-     *
-     * @param section A section to collect child sections of.
-     * @param sections A list to add any child sections to.
-     *
-     * @return {@code sections} with any child sections of {@code section} added.
-     */
-    private static List<Section> collectSections( final Section section, final List<Section> sections )
-    {
-        sections.add( section );
-        final int l = section.getLevel();
-        for ( int i = 0; i <= l; i++ )
-        {
-            section.setLevel( i );
-            for ( Section child : section.getChildren() )
-            {
-                collectSections( child, sections );
-            }
-        }
-        section.setLevel( l );
-        return sections;
+        return this.sections;
     }
 
 }

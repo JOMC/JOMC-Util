@@ -1,0 +1,16 @@
+Paragraph 1
+// SECTION-START[1]
+Paragraph 2
+// SECTION-START[1.1]
+Paragraph 3
+// SECTION-START[1.1.1]
+Paragraph 4
+Paragraph 5
+// SECTION-END
+Paragraph 6
+// SECTION-END
+Paragraph 7
+// SECTION-START[2]
+Paragraph 8
+// SECTION-END
+Paragraph 9

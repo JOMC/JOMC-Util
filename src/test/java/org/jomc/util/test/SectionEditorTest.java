@@ -105,6 +105,8 @@ public class SectionEditorTest extends LineEditorTest
         this.assertUnmatchedSections( "UnmatchedSectionsTest.txt" );
         this.assertUnmatchedSections( "UnmatchedSubsectionTest.txt" );
         this.assertUnmatchedSections( "UnmatchedSubsectionsTest.txt" );
+        this.assertUnmatchedSections( "MissingSectionStartTest.txt" );
+        this.assertUnmatchedSections( "MissingSectionsStartTest.txt" );
 
         final StringBuilder testNoSections = new StringBuilder();
         final StringBuilder expectedNoSections = new StringBuilder();

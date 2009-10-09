@@ -137,7 +137,19 @@ public class SectionEditor extends LineEditor
             }
             else if ( this.isSectionFinished( line ) )
             {
-                this.stack.pop().setEndingLine( line );
+                final Section s = this.stack.pop();
+                s.setEndingLine( line );
+
+                if ( this.stack.isEmpty() )
+                {
+                    this.stack = null;
+                    throw new IOException( this.getMessage( "unexpectedEndOfSection", new Object[]
+                        {
+                            s.getName() == null ? "/" : s.getName()
+                        } ) );
+
+                }
+
                 if ( this.stack.peek().getName() == null && this.stack.size() > 1 )
                 {
                     this.stack.pop();

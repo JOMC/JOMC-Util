@@ -32,7 +32,9 @@
  */
 package org.jomc.util.test;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.StringReader;
 import junit.framework.Assert;
 import org.apache.commons.io.IOUtils;
 import org.jomc.util.LineEditor;
@@ -76,7 +78,9 @@ public class SectionEditorTest extends LineEditorTest
         };
 
         String test = IOUtils.toString( this.getClass().getResourceAsStream( "TestSections.txt" ) );
-        String expected = IOUtils.toString( this.getClass().getResourceAsStream( "TestSectionsEdited.txt" ) );
+        String expected = convertLineSeparator(
+            IOUtils.toString( this.getClass().getResourceAsStream( "TestSectionsEdited.txt" ) ) );
+
         String edited = editor.edit( test );
 
         System.out.println( "TEST:" );
@@ -89,7 +93,9 @@ public class SectionEditorTest extends LineEditorTest
         Assert.assertEquals( expected, edited );
 
         test = IOUtils.toString( this.getClass().getResourceAsStream( "TestSectionsCont.txt" ) );
-        expected = IOUtils.toString( this.getClass().getResourceAsStream( "TestSectionsContEdited.txt" ) );
+        expected = convertLineSeparator(
+            IOUtils.toString( this.getClass().getResourceAsStream( "TestSectionsContEdited.txt" ) ) );
+
         edited = editor.edit( test );
 
         System.out.println( "TEST:" );
@@ -132,6 +138,21 @@ public class SectionEditorTest extends LineEditorTest
             Assert.assertNotNull( e.getMessage() );
             System.out.println( e.toString() );
         }
+    }
+
+    public static String convertLineSeparator( final String s ) throws IOException
+    {
+        final StringBuilder b = new StringBuilder();
+        final BufferedReader r = new BufferedReader( new StringReader( s ) );
+
+        String line;
+        while ( ( line = r.readLine() ) != null )
+        {
+            b.append( line ).append( System.getProperty( "line.separator" ) );
+        }
+
+        r.close();
+        return b.toString();
     }
 
 }

@@ -183,6 +183,53 @@ public class Section
     }
 
     /**
+     * Gets a child section matching a given name.
+     *
+     * @param sectionName The name of the section to return.
+     *
+     * @return The child section matching {@code sectionName} or {@code null} if no such section is found.
+     *
+     * @throws NullPointerException if {@code sectionName} is {@code null}.
+     */
+    public Section getSection( final String sectionName )
+    {
+        if ( sectionName == null )
+        {
+            throw new NullPointerException( "sectionName" );
+        }
+
+        return this.getSection( this, sectionName );
+    }
+
+    private Section getSection( final Section current, final String sectionName )
+    {
+        if ( sectionName.equals( current.getName() ) )
+        {
+            return current;
+        }
+
+        for ( Section child : current.getSections() )
+        {
+            if ( sectionName.equals( child.getName() ) )
+            {
+                return child;
+            }
+
+            if ( child.getName() == null )
+            {
+                final Section section = child.getSection( sectionName );
+
+                if ( section != null )
+                {
+                    return section;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Gets the parsing mode of the instance.
      *
      * @return The parsing mode of the instance.

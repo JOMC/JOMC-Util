@@ -37,7 +37,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import junit.framework.Assert;
 import org.apache.commons.io.IOUtils;
-import org.jomc.util.LineEditor;
 import org.jomc.util.Section;
 import org.jomc.util.SectionEditor;
 
@@ -58,12 +57,14 @@ public class SectionEditorTest extends LineEditorTest
 
     public void testSectionEditor() throws Exception
     {
-        final LineEditor editor = new SectionEditor()
+        final SectionEditor editor = new SectionEditor()
         {
 
             @Override
-            protected void editSection( final Section section )
+            protected void editSection( final Section section ) throws IOException
             {
+                super.editSection( section );
+
                 if ( section.getName() != null )
                 {
                     section.getHeadContent().append( section.getName() ).append( " Head" ).
@@ -91,6 +92,22 @@ public class SectionEditorTest extends LineEditorTest
         System.out.println( edited );
 
         Assert.assertEquals( expected, edited );
+        Assert.assertTrue( editor.isSectionPresent( "1" ) );
+        Assert.assertTrue( editor.isSectionPresent( "1.1" ) );
+        Assert.assertTrue( editor.isSectionPresent( "1.1.1" ) );
+        Assert.assertTrue( editor.isSectionPresent( "1.1.1.1" ) );
+        Assert.assertTrue( editor.isSectionPresent( "1.2" ) );
+        Assert.assertTrue( editor.isSectionPresent( "1.3" ) );
+        Assert.assertTrue( editor.isSectionPresent( "1.4" ) );
+        Assert.assertTrue( editor.isSectionPresent( "2" ) );
+        Assert.assertTrue( editor.isSectionPresent( "3" ) );
+        Assert.assertTrue( editor.isSectionPresent( "4" ) );
+        Assert.assertTrue( editor.isSectionPresent( "5" ) );
+        Assert.assertTrue( editor.isSectionPresent( "6" ) );
+        Assert.assertTrue( editor.isSectionPresent( "7" ) );
+        Assert.assertTrue( editor.isSectionPresent( "8" ) );
+        Assert.assertTrue( editor.isSectionPresent( "9" ) );
+        Assert.assertTrue( editor.isSectionPresent( "10" ) );
 
         test = IOUtils.toString( this.getClass().getResourceAsStream( "TestSectionsCont.txt" ) );
         expected = convertLineSeparator(
@@ -106,6 +123,11 @@ public class SectionEditorTest extends LineEditorTest
         System.out.println( edited );
 
         Assert.assertEquals( expected, edited );
+        Assert.assertTrue( editor.isSectionPresent( "1" ) );
+        Assert.assertTrue( editor.isSectionPresent( "1.1" ) );
+        Assert.assertTrue( editor.isSectionPresent( "1.1.1" ) );
+        Assert.assertTrue( editor.isSectionPresent( "2" ) );
+        Assert.assertFalse( editor.isSectionPresent( "10" ) );
 
         this.assertUnmatchedSections( "UnmatchedSectionTest.txt" );
         this.assertUnmatchedSections( "UnmatchedSectionsTest.txt" );

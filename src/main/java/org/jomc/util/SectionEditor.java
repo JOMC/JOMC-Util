@@ -34,6 +34,8 @@ package org.jomc.util;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Stack;
 
@@ -60,6 +62,9 @@ public class SectionEditor extends LineEditor
 
     /** Stack of sections. */
     private Stack<Section> stack;
+
+    /** Mapping of section names to flags indicating presence of the section. */
+    private final Map<String, Boolean> presenceFlags = new HashMap<String, Boolean>();
 
     /** Creates a new {@code SectionEditor} instance. */
     public SectionEditor()
@@ -251,6 +256,11 @@ public class SectionEditor extends LineEditor
         {
             throw new NullPointerException( "section" );
         }
+
+        if ( section.getName() != null )
+        {
+            this.presenceFlags.put( section.getName(), Boolean.TRUE );
+        }
     }
 
     /**
@@ -294,8 +304,24 @@ public class SectionEditor extends LineEditor
             throw new NullPointerException( "section" );
         }
 
+        this.presenceFlags.clear();
         this.editSections( section );
         return this.renderSections( section, new StringBuilder() ).toString();
+    }
+
+    /**
+     * Gets a flag indicating that the input of the editor contained a named section.
+     *
+     * @param sectionName The name of the section to test.
+     *
+     * @return {@code true} if the input of the editor contained a section with name {@code sectionName};
+     * {@code false} if the input of the editor did not contain a section with name {@code sectionName}.
+     */
+    public boolean isSectionPresent( final String sectionName )
+    {
+        return sectionName != null && this.presenceFlags.get( sectionName ) != null &&
+               this.presenceFlags.get( sectionName ).booleanValue();
+
     }
 
     /**

@@ -80,6 +80,12 @@ public final class TrailingWhitespaceEditor extends LineEditor
         super( editor, lineSeparator );
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>This method returns {@code line} with any trailing whitespace characters removed.</p>
+     *
+     * @see Character#isWhitespace(char)
+     */
     @Override
     protected String editLine( final String line )
     {

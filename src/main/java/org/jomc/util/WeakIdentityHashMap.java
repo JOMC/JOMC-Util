@@ -1,6 +1,6 @@
 /*
  *   Copyright (c) 2009 The JOMC Project
- *   Copyright (c) 2005 Christian Schulte <cs@jomc.org>
+ *   Copyright (c) 2005 Christian Schulte <schulte2005@users.sourceforge.net>
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -86,7 +86,7 @@ import java.util.Set;
  * it would be wrong to write a program that depends on this exception for its correctness: <i>the fail-fast behavior of
  * iterators should be used only to detect bugs.</i></p>
  *
- * @author <a href="mailto:cs@jomc.org">Christian Schulte</a>
+ * @author <a href="mailto:schulte2005@users.sourceforge.net">Christian Schulte</a>
  * @version $Id$
  *
  * @see java.util.HashMap

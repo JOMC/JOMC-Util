@@ -155,7 +155,7 @@ public class SectionEditorTest extends LineEditorTest
             this.getTestEditor().edit( IOUtils.toString( this.getClass().getResourceAsStream( resourceName ) ) );
             Assert.fail( "Expected IOException not thrown for resource '" + resourceName + "'." );
         }
-        catch ( IOException e )
+        catch ( final IOException e )
         {
             Assert.assertNotNull( e.getMessage() );
             System.out.println( e.toString() );

@@ -772,7 +772,9 @@ public final class WeakIdentityHashMap implements Map
     private Entry getEntry( final Object key )
     {
         final int hashCode = getHashCode( key );
-        for ( Entry e = this.hashTable[getHashTableIndex( hashCode, this.hashTable.length )]; e != null; e = e.next )
+        final Entry[] table = getHashTable();
+
+        for ( Entry e = table[getHashTableIndex( hashCode, table.length )]; e != null; e = e.next )
         {
             if ( e.hashCode == hashCode && e.get() == key )
             {
@@ -1073,5 +1075,4 @@ public final class WeakIdentityHashMap implements Map
         }
 
     }
-
 }

@@ -69,7 +69,7 @@ public class SectionEditor extends LineEditor
     /** Creates a new {@code SectionEditor} instance. */
     public SectionEditor()
     {
-        super();
+        this( null, null );
     }
 
     /**
@@ -79,7 +79,7 @@ public class SectionEditor extends LineEditor
      */
     public SectionEditor( final String lineSeparator )
     {
-        super( lineSeparator );
+        this( null, lineSeparator );
     }
 
     /**
@@ -89,7 +89,7 @@ public class SectionEditor extends LineEditor
      */
     public SectionEditor( final LineEditor editor )
     {
-        super( editor );
+        this( editor, null );
     }
 
     /**
@@ -319,8 +319,8 @@ public class SectionEditor extends LineEditor
      */
     public boolean isSectionPresent( final String sectionName )
     {
-        return sectionName != null && this.presenceFlags.get( sectionName ) != null &&
-               this.presenceFlags.get( sectionName ).booleanValue();
+        return sectionName != null && this.presenceFlags.get( sectionName ) != null
+               && this.presenceFlags.get( sectionName ).booleanValue();
 
     }
 

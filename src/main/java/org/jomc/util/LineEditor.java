@@ -56,7 +56,7 @@ public class LineEditor
     /** Creates a new {@code LineEditor} instance. */
     public LineEditor()
     {
-        super();
+        this( null, null );
     }
 
     /**
@@ -66,8 +66,7 @@ public class LineEditor
      */
     public LineEditor( final String lineSeparator )
     {
-        super();
-        this.lineSeparator = lineSeparator;
+        this( null, lineSeparator );
     }
 
     /**
@@ -77,8 +76,7 @@ public class LineEditor
      */
     public LineEditor( final LineEditor editor )
     {
-        super();
-        this.editor = editor;
+        this( editor, null );
     }
 
     /**
@@ -103,7 +101,7 @@ public class LineEditor
     {
         if ( this.lineSeparator == null )
         {
-            this.lineSeparator = System.getProperty( "line.separator" );
+            this.lineSeparator = System.getProperty( "line.separator", "\n" );
         }
 
         return this.lineSeparator;

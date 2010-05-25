@@ -46,7 +46,7 @@ public final class TrailingWhitespaceEditor extends LineEditor
     /** Creates a new {@code TrailingWhitespaceEditor} instance. */
     public TrailingWhitespaceEditor()
     {
-        super();
+        this( null, null );
     }
 
     /**
@@ -56,7 +56,7 @@ public final class TrailingWhitespaceEditor extends LineEditor
      */
     public TrailingWhitespaceEditor( final String lineSeparator )
     {
-        super( lineSeparator );
+        this( null, lineSeparator );
     }
 
     /**
@@ -66,7 +66,7 @@ public final class TrailingWhitespaceEditor extends LineEditor
      */
     public TrailingWhitespaceEditor( final LineEditor editor )
     {
-        super( editor );
+        this( editor, null );
     }
 
     /**

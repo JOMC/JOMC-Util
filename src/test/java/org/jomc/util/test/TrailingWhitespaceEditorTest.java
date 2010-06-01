@@ -56,6 +56,7 @@ public class TrailingWhitespaceEditorTest extends LineEditorTest
         super.testEdit();
         Assert.assertEquals( this.getTestEditor().getLineSeparator(), this.getTestEditor().edit( "\t     " ) );
         Assert.assertEquals( this.getTestEditor().getLineSeparator(), this.getTestEditor().edit( "\t     \n" ) );
+        Assert.assertEquals( "   X" + this.getTestEditor().getLineSeparator(), this.getTestEditor().edit( "   X " ) );
     }
 
 }

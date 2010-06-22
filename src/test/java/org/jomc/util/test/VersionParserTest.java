@@ -32,9 +32,10 @@
  */
 package org.jomc.util.test;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.jomc.util.VersionParser;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Testcases for the {@code VersionParser} class.
@@ -47,12 +48,12 @@ public class VersionParserTest extends TestCase
 
     public void testCompare() throws Exception
     {
-        Assert.assertEquals( 0, VersionParser.compare( "1.0", "1.0" ) );
-        Assert.assertTrue( VersionParser.compare( "1.0-alpha-1", "1.0-alpha-2" ) < 0 );
-        Assert.assertTrue( VersionParser.compare( "1.0-alpha-2", "1.0-alpha-1" ) > 0 );
-        Assert.assertTrue( VersionParser.compare( "1.0-alpha-2", "1.0-beta-1" ) < 0 );
-        Assert.assertEquals( 0, VersionParser.compare( "4aug2000r7", "4aug2000r7" ) );
-        Assert.assertTrue( VersionParser.compare( "4aug2000r7-dev", "4aug2000r7" ) < 0 );
+        assertEquals( 0, VersionParser.compare( "1.0", "1.0" ) );
+        assertTrue( VersionParser.compare( "1.0-alpha-1", "1.0-alpha-2" ) < 0 );
+        assertTrue( VersionParser.compare( "1.0-alpha-2", "1.0-alpha-1" ) > 0 );
+        assertTrue( VersionParser.compare( "1.0-alpha-2", "1.0-beta-1" ) < 0 );
+        assertEquals( 0, VersionParser.compare( "4aug2000r7", "4aug2000r7" ) );
+        assertTrue( VersionParser.compare( "4aug2000r7-dev", "4aug2000r7" ) < 0 );
     }
 
 }

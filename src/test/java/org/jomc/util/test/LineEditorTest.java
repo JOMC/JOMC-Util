@@ -32,9 +32,9 @@
  */
 package org.jomc.util.test;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.jomc.util.LineEditor;
+import static junit.framework.Assert.assertEquals;
 
 /**
  * Test cases for the {@code LineEditor} class.
@@ -75,8 +75,8 @@ public class LineEditorTest extends TestCase
 
     public void testEdit() throws Exception
     {
-        Assert.assertEquals( "", this.getTestEditor().edit( "" ) );
-        Assert.assertEquals( this.getTestEditor().getLineSeparator(), this.getTestEditor().edit( "\n" ) );
+        assertEquals( "", this.getTestEditor().edit( "" ) );
+        assertEquals( this.getTestEditor().getLineSeparator(), this.getTestEditor().edit( "\n" ) );
     }
 
 }

@@ -32,8 +32,8 @@
  */
 package org.jomc.util.test;
 
-import junit.framework.Assert;
 import org.jomc.util.TrailingWhitespaceEditor;
+import static junit.framework.Assert.assertEquals;
 
 /**
  * Test cases for the {@code TrailingWhitespaceEditor} class.
@@ -54,9 +54,9 @@ public class TrailingWhitespaceEditorTest extends LineEditorTest
     public void testEdit() throws Exception
     {
         super.testEdit();
-        Assert.assertEquals( this.getTestEditor().getLineSeparator(), this.getTestEditor().edit( "\t     " ) );
-        Assert.assertEquals( this.getTestEditor().getLineSeparator(), this.getTestEditor().edit( "\t     \n" ) );
-        Assert.assertEquals( "   X" + this.getTestEditor().getLineSeparator(), this.getTestEditor().edit( "   X " ) );
+        assertEquals( this.getTestEditor().getLineSeparator(), this.getTestEditor().edit( "\t     " ) );
+        assertEquals( this.getTestEditor().getLineSeparator(), this.getTestEditor().edit( "\t     \n" ) );
+        assertEquals( "   X" + this.getTestEditor().getLineSeparator(), this.getTestEditor().edit( "   X " ) );
     }
 
 }

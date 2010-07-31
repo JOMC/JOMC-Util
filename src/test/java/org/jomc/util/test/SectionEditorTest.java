@@ -32,6 +32,8 @@
  */
 package org.jomc.util.test;
 
+import java.util.Properties;
+import java.io.InputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -52,6 +54,9 @@ import static junit.framework.Assert.fail;
  */
 public class SectionEditorTest extends LineEditorTest
 {
+
+    /** Properties backing the instance. */
+    private Properties testProperties;
 
     @Override
     protected SectionEditor newTestEditor()
@@ -82,10 +87,8 @@ public class SectionEditorTest extends LineEditorTest
 
         };
 
-        String test = IOUtils.toString( this.getClass().getResourceAsStream( "TestSections.txt" ) );
-        String expected = convertLineSeparator(
-            IOUtils.toString( this.getClass().getResourceAsStream( "TestSectionsEdited.txt" ) ) );
-
+        String test = this.getResource( "TestSections.txt" );
+        String expected = convertLineSeparator( this.getResource( "TestSectionsEdited.txt" ) );
         String edited = editor.edit( test );
 
         System.out.println( "TEST:" );
@@ -113,9 +116,8 @@ public class SectionEditorTest extends LineEditorTest
         assertTrue( editor.isSectionPresent( "9" ) );
         assertTrue( editor.isSectionPresent( "10" ) );
 
-        test = IOUtils.toString( this.getClass().getResourceAsStream( "TestSectionsCont.txt" ) );
-        expected = convertLineSeparator(
-            IOUtils.toString( this.getClass().getResourceAsStream( "TestSectionsContEdited.txt" ) ) );
+        test = this.getResource( "TestSectionsCont.txt" );
+        expected = convertLineSeparator( this.getResource( "TestSectionsContEdited.txt" ) );
 
         edited = editor.edit( test );
 
@@ -156,7 +158,7 @@ public class SectionEditorTest extends LineEditorTest
     {
         try
         {
-            this.getTestEditor().edit( IOUtils.toString( this.getClass().getResourceAsStream( resourceName ) ) );
+            this.getTestEditor().edit( this.getResource( resourceName ) );
             fail( "Expected IOException not thrown for resource '" + resourceName + "'." );
         }
         catch ( final IOException e )
@@ -179,6 +181,37 @@ public class SectionEditorTest extends LineEditorTest
 
         r.close();
         return b.toString();
+    }
+
+    private String getTestProperty( final String key ) throws IOException
+    {
+        if ( this.testProperties == null )
+        {
+            this.testProperties = new java.util.Properties();
+            final InputStream in = this.getClass().getResourceAsStream( "SectionEditorTest.properties" );
+            this.testProperties.load( in );
+            in.close();
+        }
+
+        final String value = this.testProperties.getProperty( key );
+        assertNotNull( value );
+        return value;
+    }
+
+    private String getResource( final String resourceName ) throws IOException
+    {
+        InputStream in = null;
+
+        try
+        {
+            in = this.getClass().getResourceAsStream( resourceName );
+            assertNotNull( "Resource '" + resourceName + "' not found.", in );
+            return IOUtils.toString( in, this.getTestProperty( "resourceEncoding" ) );
+        }
+        finally
+        {
+            IOUtils.closeQuietly( in );
+        }
     }
 
 }

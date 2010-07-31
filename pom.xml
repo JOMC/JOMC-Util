@@ -52,8 +52,12 @@
     </resources>
     <testResources>
       <testResource>
-        <filtering>false</filtering>
+        <filtering>true</filtering>
         <directory>src/test/resources</directory>
+      </testResource>
+      <testResource>
+        <filtering>false</filtering>
+        <directory>src/test/testfiles</directory>
       </testResource>
     </testResources>
     <plugins>

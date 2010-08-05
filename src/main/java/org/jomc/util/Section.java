@@ -146,7 +146,7 @@ public class Section
     {
         if ( this.headContent == null )
         {
-            this.headContent = new StringBuilder();
+            this.headContent = new StringBuilder( 512 );
         }
 
         return this.headContent;
@@ -161,7 +161,7 @@ public class Section
     {
         if ( this.tailContent == null )
         {
-            this.tailContent = new StringBuilder();
+            this.tailContent = new StringBuilder( 512 );
         }
 
         return this.tailContent;

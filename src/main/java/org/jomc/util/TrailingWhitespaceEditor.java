@@ -104,7 +104,7 @@ public final class TrailingWhitespaceEditor extends LineEditor
                 {
                     if ( whitespace == null )
                     {
-                        whitespace = new StringBuilder();
+                        whitespace = new StringBuilder( line.length() );
                     }
 
                     whitespace.append( chars[i] );

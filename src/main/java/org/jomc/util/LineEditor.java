@@ -125,7 +125,7 @@ public class LineEditor
         if ( text != null )
         {
             final BufferedReader reader = new BufferedReader( new StringReader( text ) );
-            final StringBuilder buf = new StringBuilder();
+            final StringBuilder buf = new StringBuilder( text.length() );
 
             String line = null;
             while ( ( line = reader.readLine() ) != null )

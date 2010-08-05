@@ -306,7 +306,7 @@ public class SectionEditor extends LineEditor
 
         this.presenceFlags.clear();
         this.editSections( section );
-        return this.renderSections( section, new StringBuilder() ).toString();
+        return this.renderSections( section, new StringBuilder( 512 ) ).toString();
     }
 
     /**

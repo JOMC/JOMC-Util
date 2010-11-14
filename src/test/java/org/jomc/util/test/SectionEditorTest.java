@@ -32,6 +32,7 @@
  */
 package org.jomc.util.test;
 
+import org.junit.Test;
 import java.util.Properties;
 import java.io.InputStream;
 import java.io.BufferedReader;
@@ -40,14 +41,14 @@ import java.io.StringReader;
 import org.apache.commons.io.IOUtils;
 import org.jomc.util.Section;
 import org.jomc.util.SectionEditor;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
- * Test cases for the {@code SectionEditor} class.
+ * Test cases for class {@code org.jomc.util.SectionEditor}.
  *
  * @author <a href="mailto:schulte2005@users.sourceforge.net">Christian Schulte</a>
  * @version $Id$
@@ -58,12 +59,27 @@ public class SectionEditorTest extends LineEditorTest
     /** Properties backing the instance. */
     private Properties testProperties;
 
+    /** Creates a new {@code SectionEditorTest} instance. */
+    public SectionEditorTest()
+    {
+        super();
+    }
+
+    /** {@code inheritDoc} */
     @Override
-    protected SectionEditor newTestEditor()
+    public SectionEditor getLineEditor()
+    {
+        return (SectionEditor) super.getLineEditor();
+    }
+
+    /** {@code inheritDoc} */
+    @Override
+    protected SectionEditor newLineEditor()
     {
         return new SectionEditor();
     }
 
+    @Test
     public void testSectionEditor() throws Exception
     {
         final SectionEditor editor = new SectionEditor()
@@ -148,17 +164,17 @@ public class SectionEditorTest extends LineEditorTest
         for ( int i = 1000; i >= 0; i-- )
         {
             testNoSections.append( "Hello editor.\n" );
-            expectedNoSections.append( "Hello editor." ).append( this.getTestEditor().getLineSeparator() );
+            expectedNoSections.append( "Hello editor." ).append( this.getLineEditor().getLineSeparator() );
         }
 
-        assertEquals( expectedNoSections.toString(), this.getTestEditor().edit( testNoSections.toString() ) );
+        assertEquals( expectedNoSections.toString(), this.getLineEditor().edit( testNoSections.toString() ) );
     }
 
-    public void assertUnmatchedSections( final String resourceName ) throws Exception
+    private void assertUnmatchedSections( final String resourceName ) throws Exception
     {
         try
         {
-            this.getTestEditor().edit( this.getResource( resourceName ) );
+            this.getLineEditor().edit( this.getResource( resourceName ) );
             fail( "Expected IOException not thrown for resource '" + resourceName + "'." );
         }
         catch ( final IOException e )
@@ -168,7 +184,7 @@ public class SectionEditorTest extends LineEditorTest
         }
     }
 
-    public static String convertLineSeparator( final String s ) throws IOException
+    private static String convertLineSeparator( final String s ) throws IOException
     {
         final StringBuilder b = new StringBuilder();
         final BufferedReader r = new BufferedReader( new StringReader( s ) );

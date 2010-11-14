@@ -32,21 +32,28 @@
  */
 package org.jomc.util.test;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 import org.jomc.util.VersionParser;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
- * Testcases for the {@code VersionParser} class.
+ * Test cases for class {@code org.jomc.util.VersionParser}.
  *
  * @author <a href="mailto:schulte2005@users.sourceforge.net">Christian Schulte</a>
  * @version $Id$
  */
-public class VersionParserTest extends TestCase
+public class VersionParserTest
 {
 
-    public void testCompare() throws Exception
+    /** Creates a new {@code VersionParserTest} instance. */
+    public VersionParserTest()
+    {
+        super();
+    }
+
+    @Test
+    public final void testCompare() throws Exception
     {
         assertEquals( 0, VersionParser.compare( "1.0", "1.0" ) );
         assertTrue( VersionParser.compare( "1.0-alpha-1", "1.0-alpha-2" ) < 0 );

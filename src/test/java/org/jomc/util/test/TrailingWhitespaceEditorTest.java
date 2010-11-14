@@ -32,11 +32,12 @@
  */
 package org.jomc.util.test;
 
+import org.junit.Test;
 import org.jomc.util.TrailingWhitespaceEditor;
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
- * Test cases for the {@code TrailingWhitespaceEditor} class.
+ * Test cases for class {@code org.jomc.util.TrailingWhitespaceEditor}.
  *
  * @author <a href="mailto:schulte2005@users.sourceforge.net">Christian Schulte</a>
  * @version $Id$
@@ -44,19 +45,32 @@ import static junit.framework.Assert.assertEquals;
 public class TrailingWhitespaceEditorTest extends LineEditorTest
 {
 
+    /** Creates a new {@code TrailingWhitespaceEditorTest} instance. */
+    public TrailingWhitespaceEditorTest()
+    {
+        super();
+    }
+
+    /** {@code inheritDoc} */
     @Override
-    protected TrailingWhitespaceEditor newTestEditor()
+    public TrailingWhitespaceEditor getLineEditor()
+    {
+        return (TrailingWhitespaceEditor) super.getLineEditor();
+    }
+
+    /** {@code inheritDoc} */
+    @Override
+    protected TrailingWhitespaceEditor newLineEditor()
     {
         return new TrailingWhitespaceEditor();
     }
 
-    @Override
-    public void testEdit() throws Exception
+    @Test
+    public final void testTrailingWhitespace() throws Exception
     {
-        super.testEdit();
-        assertEquals( this.getTestEditor().getLineSeparator(), this.getTestEditor().edit( "\t     " ) );
-        assertEquals( this.getTestEditor().getLineSeparator(), this.getTestEditor().edit( "\t     \n" ) );
-        assertEquals( "   X" + this.getTestEditor().getLineSeparator(), this.getTestEditor().edit( "   X " ) );
+        assertEquals( this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "\t     " ) );
+        assertEquals( this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "\t     \n" ) );
+        assertEquals( "   X" + this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "   X " ) );
     }
 
 }

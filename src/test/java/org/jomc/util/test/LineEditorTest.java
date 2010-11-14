@@ -32,51 +32,62 @@
  */
 package org.jomc.util.test;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 import org.jomc.util.LineEditor;
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
- * Test cases for the {@code LineEditor} class.
+ * Test cases for class {@code org.jomc.util.LineEditor}.
  *
  * @author <a href="mailto:schulte2005@users.sourceforge.net">Christian Schulte</a>
  * @version $Id$
  */
-public class LineEditorTest extends TestCase
+public class LineEditorTest
 {
 
     /** The {@code LineEditor} instance tests are performed with. */
-    private LineEditor testEditor;
+    private LineEditor lineEditor;
+
+    /** Creates a new {@code LineEditorTest} instance. */
+    public LineEditorTest()
+    {
+        super();
+    }
 
     /**
-     * Gets the {@code LineEditor} instance tests are performed. with.
+     * Gets the {@code LineEditor} instance tests are performed with.
      *
-     * @return The {@code LineEditor} instance tests are performed. with.
+     * @return The {@code LineEditor} instance tests are performed with.
+     *
+     * @see #newLineEditor()
      */
-    public LineEditor getTestEditor()
+    public LineEditor getLineEditor()
     {
-        if ( this.testEditor == null )
+        if ( this.lineEditor == null )
         {
-            this.testEditor = this.newTestEditor();
+            this.lineEditor = this.newLineEditor();
         }
 
-        return this.testEditor;
+        return this.lineEditor;
     }
 
     /**
      * Gets a new {@code LineEditor} instance to test.
      *
      * @return A new {@code LineEditor} instance to test.
+     *
+     * @see #getLineEditor()
      */
-    protected LineEditor newTestEditor()
+    protected LineEditor newLineEditor()
     {
         return new LineEditor();
     }
 
-    public void testEdit() throws Exception
+    @Test
+    public final void testEdit() throws Exception
     {
-        assertEquals( "", this.getTestEditor().edit( "" ) );
-        assertEquals( this.getTestEditor().getLineSeparator(), this.getTestEditor().edit( "\n" ) );
+        assertEquals( "", this.getLineEditor().edit( "" ) );
+        assertEquals( this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "\n" ) );
     }
 
 }

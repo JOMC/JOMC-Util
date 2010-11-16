@@ -33,7 +33,6 @@
 package org.jomc.util.test;
 
 import org.junit.Test;
-import java.util.Properties;
 import java.io.InputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -56,9 +55,6 @@ import static org.junit.Assert.fail;
 public class SectionEditorTest extends LineEditorTest
 {
 
-    /** Properties backing the instance. */
-    private Properties testProperties;
-
     /** Creates a new {@code SectionEditorTest} instance. */
     public SectionEditorTest()
     {
@@ -76,13 +72,7 @@ public class SectionEditorTest extends LineEditorTest
     @Override
     protected SectionEditor newLineEditor()
     {
-        return new SectionEditor();
-    }
-
-    @Test
-    public void testSectionEditor() throws Exception
-    {
-        final SectionEditor editor = new SectionEditor()
+        return new SectionEditor()
         {
 
             @Override
@@ -102,10 +92,14 @@ public class SectionEditorTest extends LineEditorTest
             }
 
         };
+    }
 
+    @Test
+    public final void testSectionEditor() throws Exception
+    {
         String test = this.getResource( "TestSections.txt" );
         String expected = convertLineSeparator( this.getResource( "TestSectionsEdited.txt" ) );
-        String edited = editor.edit( test );
+        String edited = this.getLineEditor().edit( test );
 
         System.out.println( "TEST:" );
         System.out.println( test );
@@ -115,27 +109,27 @@ public class SectionEditorTest extends LineEditorTest
         System.out.println( edited );
 
         assertEquals( expected, edited );
-        assertTrue( editor.isSectionPresent( "1" ) );
-        assertTrue( editor.isSectionPresent( "1.1" ) );
-        assertTrue( editor.isSectionPresent( "1.1.1" ) );
-        assertTrue( editor.isSectionPresent( "1.1.1.1" ) );
-        assertTrue( editor.isSectionPresent( "1.2" ) );
-        assertTrue( editor.isSectionPresent( "1.3" ) );
-        assertTrue( editor.isSectionPresent( "1.4" ) );
-        assertTrue( editor.isSectionPresent( "2" ) );
-        assertTrue( editor.isSectionPresent( "3" ) );
-        assertTrue( editor.isSectionPresent( "4" ) );
-        assertTrue( editor.isSectionPresent( "5" ) );
-        assertTrue( editor.isSectionPresent( "6" ) );
-        assertTrue( editor.isSectionPresent( "7" ) );
-        assertTrue( editor.isSectionPresent( "8" ) );
-        assertTrue( editor.isSectionPresent( "9" ) );
-        assertTrue( editor.isSectionPresent( "10" ) );
+        assertTrue( this.getLineEditor().isSectionPresent( "1" ) );
+        assertTrue( this.getLineEditor().isSectionPresent( "1.1" ) );
+        assertTrue( this.getLineEditor().isSectionPresent( "1.1.1" ) );
+        assertTrue( this.getLineEditor().isSectionPresent( "1.1.1.1" ) );
+        assertTrue( this.getLineEditor().isSectionPresent( "1.2" ) );
+        assertTrue( this.getLineEditor().isSectionPresent( "1.3" ) );
+        assertTrue( this.getLineEditor().isSectionPresent( "1.4" ) );
+        assertTrue( this.getLineEditor().isSectionPresent( "2" ) );
+        assertTrue( this.getLineEditor().isSectionPresent( "3" ) );
+        assertTrue( this.getLineEditor().isSectionPresent( "4" ) );
+        assertTrue( this.getLineEditor().isSectionPresent( "5" ) );
+        assertTrue( this.getLineEditor().isSectionPresent( "6" ) );
+        assertTrue( this.getLineEditor().isSectionPresent( "7" ) );
+        assertTrue( this.getLineEditor().isSectionPresent( "8" ) );
+        assertTrue( this.getLineEditor().isSectionPresent( "9" ) );
+        assertTrue( this.getLineEditor().isSectionPresent( "10" ) );
 
         test = this.getResource( "TestSectionsCont.txt" );
         expected = convertLineSeparator( this.getResource( "TestSectionsContEdited.txt" ) );
 
-        edited = editor.edit( test );
+        edited = this.getLineEditor().edit( test );
 
         System.out.println( "TEST:" );
         System.out.println( test );
@@ -145,11 +139,11 @@ public class SectionEditorTest extends LineEditorTest
         System.out.println( edited );
 
         assertEquals( expected, edited );
-        assertTrue( editor.isSectionPresent( "1" ) );
-        assertTrue( editor.isSectionPresent( "1.1" ) );
-        assertTrue( editor.isSectionPresent( "1.1.1" ) );
-        assertTrue( editor.isSectionPresent( "2" ) );
-        assertFalse( editor.isSectionPresent( "10" ) );
+        assertTrue( this.getLineEditor().isSectionPresent( "1" ) );
+        assertTrue( this.getLineEditor().isSectionPresent( "1.1" ) );
+        assertTrue( this.getLineEditor().isSectionPresent( "1.1.1" ) );
+        assertTrue( this.getLineEditor().isSectionPresent( "2" ) );
+        assertFalse( this.getLineEditor().isSectionPresent( "10" ) );
 
         this.assertUnmatchedSections( "UnmatchedSectionTest.txt" );
         this.assertUnmatchedSections( "UnmatchedSectionsTest.txt" );
@@ -192,42 +186,20 @@ public class SectionEditorTest extends LineEditorTest
         String line;
         while ( ( line = r.readLine() ) != null )
         {
-            b.append( line ).append( System.getProperty( "line.separator" ) );
+            b.append( line ).append( System.getProperty( "line.separator", "\n" ) );
         }
 
         r.close();
         return b.toString();
     }
 
-    private String getTestProperty( final String key ) throws IOException
-    {
-        if ( this.testProperties == null )
-        {
-            this.testProperties = new java.util.Properties();
-            final InputStream in = this.getClass().getResourceAsStream( "SectionEditorTest.properties" );
-            this.testProperties.load( in );
-            in.close();
-        }
-
-        final String value = this.testProperties.getProperty( key );
-        assertNotNull( value );
-        return value;
-    }
-
     private String getResource( final String resourceName ) throws IOException
     {
-        InputStream in = null;
-
-        try
-        {
-            in = this.getClass().getResourceAsStream( resourceName );
-            assertNotNull( "Resource '" + resourceName + "' not found.", in );
-            return IOUtils.toString( in, this.getTestProperty( "resourceEncoding" ) );
-        }
-        finally
-        {
-            IOUtils.closeQuietly( in );
-        }
+        final InputStream in = this.getClass().getResourceAsStream( resourceName );
+        assertNotNull( "Resource '" + resourceName + "' not found.", in );
+        final String content = IOUtils.toString( in, this.getResourceEncoding() );
+        in.close();
+        return content;
     }
 
 }

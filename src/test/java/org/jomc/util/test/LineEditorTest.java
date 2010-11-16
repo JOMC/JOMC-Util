@@ -35,6 +35,8 @@ package org.jomc.util.test;
 import org.junit.Test;
 import org.jomc.util.LineEditor;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Test cases for class {@code org.jomc.util.LineEditor}.
@@ -45,8 +47,14 @@ import static org.junit.Assert.assertEquals;
 public class LineEditorTest
 {
 
+    /** Constant for the name of the system property holding the name of the encoding of resources backing the test. */
+    private static final String RESOURCE_ENCODING_PROPERTY_NAME = "jomc.test.resourceEncoding";
+
     /** The {@code LineEditor} instance tests are performed with. */
     private LineEditor lineEditor;
+
+    /** The name of the encoding to use when reading resources. */
+    private String resourceEncoding;
 
     /** Creates a new {@code LineEditorTest} instance. */
     public LineEditorTest()
@@ -83,11 +91,44 @@ public class LineEditorTest
         return new LineEditor();
     }
 
+    /**
+     * Gets the name of the encoding used when reading resources.
+     *
+     * @return The name of the encoding used when reading resources.
+     *
+     * @see #setResourceEncoding(java.lang.String)
+     */
+    public final String getResourceEncoding()
+    {
+        if ( this.resourceEncoding == null )
+        {
+            this.resourceEncoding = System.getProperty( RESOURCE_ENCODING_PROPERTY_NAME );
+            assertNotNull( "Expected '" + RESOURCE_ENCODING_PROPERTY_NAME + "' system property not found.",
+                           this.resourceEncoding );
+
+        }
+
+        return this.resourceEncoding;
+    }
+
+    /**
+     * Sets the name of the encoding to use when reading resources.
+     *
+     * @param value The new name of the encoding to use when reading resources or {@code null}.
+     *
+     * @see #getResourceEncoding()
+     */
+    public final void setResourceEncoding( final String value )
+    {
+        this.resourceEncoding = value;
+    }
+
     @Test
     public final void testEdit() throws Exception
     {
         assertEquals( "", this.getLineEditor().edit( "" ) );
         assertEquals( this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "\n" ) );
+        assertNull( this.getLineEditor().edit( null ) );
     }
 
 }

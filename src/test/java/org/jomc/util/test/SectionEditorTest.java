@@ -55,6 +55,9 @@ import static org.junit.Assert.fail;
 public class SectionEditorTest extends LineEditorTest
 {
 
+    /** Constant to prefix relative resource names with. */
+    private static final String ABSOLUTE_RESOURCE_NAME_PREFIX = "/org/jomc/util/test/";
+
     /** Creates a new {@code SectionEditorTest} instance. */
     public SectionEditorTest()
     {
@@ -97,8 +100,10 @@ public class SectionEditorTest extends LineEditorTest
     @Test
     public final void testSectionEditor() throws Exception
     {
-        String test = this.getResource( "TestSections.txt" );
-        String expected = convertLineSeparator( this.getResource( "TestSectionsEdited.txt" ) );
+        String test = this.getResource( ABSOLUTE_RESOURCE_NAME_PREFIX + "TestSections.txt" );
+        String expected =
+            convertLineSeparator( this.getResource( ABSOLUTE_RESOURCE_NAME_PREFIX + "TestSectionsEdited.txt" ) );
+
         String edited = this.getLineEditor().edit( test );
 
         System.out.println( "TEST:" );
@@ -126,8 +131,9 @@ public class SectionEditorTest extends LineEditorTest
         assertTrue( this.getLineEditor().isSectionPresent( "9" ) );
         assertTrue( this.getLineEditor().isSectionPresent( "10" ) );
 
-        test = this.getResource( "TestSectionsCont.txt" );
-        expected = convertLineSeparator( this.getResource( "TestSectionsContEdited.txt" ) );
+        test = this.getResource( ABSOLUTE_RESOURCE_NAME_PREFIX + "TestSectionsCont.txt" );
+        expected =
+            convertLineSeparator( this.getResource( ABSOLUTE_RESOURCE_NAME_PREFIX + "TestSectionsContEdited.txt" ) );
 
         edited = this.getLineEditor().edit( test );
 
@@ -145,12 +151,12 @@ public class SectionEditorTest extends LineEditorTest
         assertTrue( this.getLineEditor().isSectionPresent( "2" ) );
         assertFalse( this.getLineEditor().isSectionPresent( "10" ) );
 
-        this.assertUnmatchedSections( "UnmatchedSectionTest.txt" );
-        this.assertUnmatchedSections( "UnmatchedSectionsTest.txt" );
-        this.assertUnmatchedSections( "UnmatchedSubsectionTest.txt" );
-        this.assertUnmatchedSections( "UnmatchedSubsectionsTest.txt" );
-        this.assertUnmatchedSections( "MissingSectionStartTest.txt" );
-        this.assertUnmatchedSections( "MissingSectionsStartTest.txt" );
+        this.assertUnmatchedSections( ABSOLUTE_RESOURCE_NAME_PREFIX + "UnmatchedSectionTest.txt" );
+        this.assertUnmatchedSections( ABSOLUTE_RESOURCE_NAME_PREFIX + "UnmatchedSectionsTest.txt" );
+        this.assertUnmatchedSections( ABSOLUTE_RESOURCE_NAME_PREFIX + "UnmatchedSubsectionTest.txt" );
+        this.assertUnmatchedSections( ABSOLUTE_RESOURCE_NAME_PREFIX + "UnmatchedSubsectionsTest.txt" );
+        this.assertUnmatchedSections( ABSOLUTE_RESOURCE_NAME_PREFIX + "MissingSectionStartTest.txt" );
+        this.assertUnmatchedSections( ABSOLUTE_RESOURCE_NAME_PREFIX + "MissingSectionsStartTest.txt" );
 
         final StringBuilder testNoSections = new StringBuilder();
         final StringBuilder expectedNoSections = new StringBuilder();
@@ -195,6 +201,7 @@ public class SectionEditorTest extends LineEditorTest
 
     private String getResource( final String resourceName ) throws IOException
     {
+        assertTrue( resourceName.startsWith( "/" ) );
         final InputStream in = this.getClass().getResourceAsStream( resourceName );
         assertNotNull( "Resource '" + resourceName + "' not found.", in );
         final String content = IOUtils.toString( in, this.getResourceEncoding() );

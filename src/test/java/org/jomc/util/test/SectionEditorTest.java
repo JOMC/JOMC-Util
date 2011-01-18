@@ -32,14 +32,14 @@
  */
 package org.jomc.util.test;
 
-import org.junit.Test;
-import java.io.InputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import org.apache.commons.io.IOUtils;
 import org.jomc.util.Section;
 import org.jomc.util.SectionEditor;
+import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;

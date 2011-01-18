@@ -32,8 +32,8 @@
  */
 package org.jomc.util.test;
 
-import org.junit.Test;
 import org.jomc.util.TrailingWhitespaceEditor;
+import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**

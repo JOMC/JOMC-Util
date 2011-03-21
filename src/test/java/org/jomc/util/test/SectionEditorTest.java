@@ -64,14 +64,14 @@ public class SectionEditorTest extends LineEditorTest
         super();
     }
 
-    /** {@code inheritDoc} */
+    /** {@inheritDoc} */
     @Override
     public SectionEditor getLineEditor()
     {
         return (SectionEditor) super.getLineEditor();
     }
 
-    /** {@code inheritDoc} */
+    /** {@inheritDoc} */
     @Override
     protected SectionEditor newLineEditor()
     {

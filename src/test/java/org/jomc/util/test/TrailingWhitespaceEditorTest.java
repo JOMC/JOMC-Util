@@ -51,14 +51,14 @@ public class TrailingWhitespaceEditorTest extends LineEditorTest
         super();
     }
 
-    /** {@code inheritDoc} */
+    /** {@inheritDoc} */
     @Override
     public TrailingWhitespaceEditor getLineEditor()
     {
         return (TrailingWhitespaceEditor) super.getLineEditor();
     }
 
-    /** {@code inheritDoc} */
+    /** {@inheritDoc} */
     @Override
     protected TrailingWhitespaceEditor newLineEditor()
     {

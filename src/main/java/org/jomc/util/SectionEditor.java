@@ -279,9 +279,9 @@ public class SectionEditor extends LineEditor
         }
 
         this.editSection( section );
-        for ( Section child : section.getSections() )
+        for ( int i = 0, l = section.getSections().size(); i < l; i++ )
         {
-            this.editSections( child );
+            this.editSections( section.getSections().get( i ) );
         }
     }
 
@@ -341,9 +341,9 @@ public class SectionEditor extends LineEditor
 
         buffer.append( section.getHeadContent() );
 
-        for ( Section child : section.getSections() )
+        for ( int i = 0, l = section.getSections().size(); i < l; i++ )
         {
-            this.renderSections( child, buffer );
+            this.renderSections( section.getSections().get( i ), buffer );
         }
 
         buffer.append( section.getTailContent() );

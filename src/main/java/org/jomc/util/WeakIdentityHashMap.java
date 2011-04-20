@@ -50,7 +50,7 @@ import java.util.Set;
  * <p>In a {@code WeakIdentityHashMap} two keys {@code k1} and {@code k2} are considered equal if and only if
  * {@code k1==k2} evaluates to {@code true}. An entry will automatically be removed when its key is no longer in
  * ordinary use. More precisely, the presence of a mapping for a given key will not prevent the key from being discarded
- * by the garbage collector, that is, made finalizable, finalized, and then reclaimed. When a key has been discarded its
+ * by the garbage collector, that is, made finalizable, finalised, and then reclaimed. When a key has been discarded its
  * entry is effectively removed from the map, so this class behaves somewhat differently from other {@code Map}
  * implementations and is not a general-purpose {@code Map} implementation! Although it implements the {@code Map}
  * interface, it intentionally violates {@code Map}'s general contract, which mandates the use of the {@code equals}
@@ -61,13 +61,13 @@ import java.util.Set;
  * provided. It does not support {@code null} values and the {@code null} key. All methods taking a key or value will
  * throw a {@code NullPointerException} when given a {@code null} reference. No guarantees are made as to the order of
  * the map; in particular, there is no guarantee that the order will remain constant over time. Like most collection
- * classes, this class is not synchronized. A synchronized {@code WeakIdentityHashMap} may be constructed using the
+ * classes, this class is not synchronised. A synchronised {@code WeakIdentityHashMap} may be constructed using the
  * {@code Collections.synchronizedMap} method.</p>
  *
- * <p>The behavior of the {@code WeakIdentityHashMap} class depends in part upon the actions of the garbage collector,
+ * <p>The behaviour of the {@code WeakIdentityHashMap} class depends in part upon the actions of the garbage collector,
  * so several {@code Map} invariants do not hold for this class. Because the garbage collector may discard keys at
  * any time, a {@code WeakIdentityHashMap} may behave as though an unknown thread is silently removing entries. In
- * particular, even if synchronizing on a {@code WeakIdentityHashMap} instance and invoking none of its mutator
+ * particular, even if synchronising on a {@code WeakIdentityHashMap} instance and invoking none of its mutator
  * methods, it is possible for the {@code size} method to return smaller values over time, for the {@code isEmpty}
  * method to return {@code false} and then {@code true}, for the {@code containsKey} method to return {@code true} and
  * later {@code false} for a given key, for the {@code get} method to return a value for a given key but later return
@@ -77,14 +77,17 @@ import java.util.Set;
  * all {@code Iterator}s and {@code Entry}s created by this class throw an {@code IllegalStateException} when a key
  * becomes {@code null} or a mapping got removed.</p>
  *
- * <p>The iterators returned by the {@code iterator} method of the collections returned by all of this class's
+ * <p>The iterators returned by the {@code iterator} method of the collections returned by all of this classes
  * "collection view methods" are fail-fast: if the map is structurally modified at any time after the iterator is
  * created, in any way except through the iterator's own {@code remove} method, the iterator will throw a
- * {@code ConcurrentModificationException}. Note that the fail-fast behavior of an iterator cannot be guaranteed as it
- * is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent
+ * {@code ConcurrentModificationException}. Note that the fail-fast behaviour of an iterator cannot be guaranteed as it
+ * is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronised concurrent
  * modification. Fail-fast iterators throw {@code ConcurrentModificationException}s on a best-effort basis. Therefore,
- * it would be wrong to write a program that depends on this exception for its correctness: <i>the fail-fast behavior of
- * iterators should be used only to detect bugs.</i></p>
+ * it would be wrong to write a program that depends on this exception for its correctness: <i>the fail-fast behaviour
+ * of iterators should be used only to detect bugs.</i></p>
+ *
+ * @param <K> The type of keys maintained by this map.
+ * @param <V> The type of mapped values.
  *
  * @author <a href="mailto:schulte2005@users.sourceforge.net">Christian Schulte</a>
  * @version $Id$
@@ -94,7 +97,7 @@ import java.util.Set;
  * @see java.util.IdentityHashMap
  * @see java.util.Collections#synchronizedMap
  */
-public final class WeakIdentityHashMap implements Map
+public final class WeakIdentityHashMap<K, V> implements Map<K, V>
 {
 
     /** Maximum capacity of the hash-table backing the implementation ({@code 2^30}). */
@@ -116,19 +119,19 @@ public final class WeakIdentityHashMap implements Map
     private int resizeThreshold;
 
     /** The hash-table backing the map. */
-    private Entry[] hashTable;
+    private WeakEntry<K, V>[] hashTable;
 
     /** Queue, to which weak keys are appended to. */
-    private final ReferenceQueue referenceQueue = new ReferenceQueue();
+    private final ReferenceQueue<K> referenceQueue = new ReferenceQueue<K>();
 
     /** The key set view of the map. */
-    private transient Set keySet;
+    private transient Set<K> keySet;
 
     /** The entry set view of the map. */
-    private transient Set entrySet;
+    private transient Set<Map.Entry<K, V>> entrySet;
 
     /** The value collection view of the map. */
-    private transient Collection valueCollection;
+    private transient Collection<V> valueCollection;
 
     /** The initial capacity of the hash table. */
     private final int initialCapacity;
@@ -137,7 +140,7 @@ public final class WeakIdentityHashMap implements Map
     private final float loadFactor;
 
     /** Null value returned by method {@link #getEntry(Object)}. */
-    private final Entry NULL_ENTRY = new Entry( null, null, 0, this.referenceQueue );
+    private final WeakEntry<K, V> NULL_ENTRY = new WeakEntry<K, V>( null, null, 0, this.referenceQueue );
 
     /**
      * Constructs a new, empty {@code WeakIdentityHashMap} with the default initial capacity ({@code 16}) and load
@@ -199,7 +202,7 @@ public final class WeakIdentityHashMap implements Map
         this.loadFactor = loadFactor;
         this.resizeThreshold = initialCapacity;
         this.size = 0;
-        this.hashTable = new Entry[ initialCapacity ];
+        this.hashTable = new WeakEntry[ initialCapacity ];
     }
 
     /**
@@ -270,11 +273,11 @@ public final class WeakIdentityHashMap implements Map
             throw new NullPointerException( "value" );
         }
 
-        final Entry[] table = this.getHashTable();
+        final WeakEntry<K, V>[] table = this.getHashTable();
 
         for ( int i = table.length - 1; i >= 0; i-- )
         {
-            for ( Entry e = table[i]; e != null; e = e.next )
+            for ( WeakEntry<K, V> e = table[i]; e != null; e = e.next )
             {
                 if ( value.equals( e.value ) )
                 {
@@ -294,12 +297,12 @@ public final class WeakIdentityHashMap implements Map
      *
      * @param key The key whose associated value is to be returned.
      *
-     * @return the value to which {@code key} is mapped, or {@code null} if this map contains no mapping for
+     * @return The value to which {@code key} is mapped, or {@code null} if this map contains no mapping for
      * {@code key}.
      *
      * @throws NullPointerException if {@code key} is {@code null}.
      */
-    public Object get( final Object key )
+    public V get( final Object key )
     {
         if ( key == null )
         {
@@ -316,12 +319,12 @@ public final class WeakIdentityHashMap implements Map
      * @param key The key with which {@code value} is to be associated.
      * @param value The value to be associated with {@code key}.
      *
-     * @return the value previously associated with {@code key}, or {@code null} if there was no mapping for
+     * @return The value previously associated with {@code key}, or {@code null} if there was no mapping for
      * {@code key}.
      *
      * @throws NullPointerException if {@code key} or {@code value} is {@code null}.
      */
-    public Object put( final Object key, final Object value )
+    public V put( final K key, final V value )
     {
         if ( key == null )
         {
@@ -333,20 +336,20 @@ public final class WeakIdentityHashMap implements Map
         }
 
         final int hashCode = getHashCode( key );
-        final Entry[] table = this.getHashTable();
+        final WeakEntry<K, V>[] table = this.getHashTable();
         final int index = getHashTableIndex( hashCode, table.length );
 
-        for ( Entry e = table[index]; e != null; e = e.next )
+        for ( WeakEntry<K, V> e = table[index]; e != null; e = e.next )
         {
             if ( e.hashCode == hashCode && e.get() == key )
             {
-                final Object oldValue = e.value;
+                final V oldValue = e.value;
                 e.value = value;
                 return oldValue;
             }
         }
 
-        final Entry entry = new Entry( key, value, hashCode, this.referenceQueue );
+        final WeakEntry<K, V> entry = new WeakEntry<K, V>( key, value, hashCode, this.referenceQueue );
         entry.next = table[index];
         table[index] = entry;
 
@@ -363,23 +366,23 @@ public final class WeakIdentityHashMap implements Map
      *
      * @param key The key whose mapping is to be removed from the map.
      *
-     * @return the value previously associated with {@code key}, or {@code null} if there was no mapping for
+     * @return The value previously associated with {@code key}, or {@code null} if there was no mapping for
      * {@code key}.
      *
      * @throws NullPointerException if {@code key} is {@code null}.
      */
-    public Object remove( final Object key )
+    public V remove( final Object key )
     {
         if ( key == null )
         {
             throw new NullPointerException( "key" );
         }
 
-        final Entry[] table = this.getHashTable();
+        final WeakEntry<K, V>[] table = this.getHashTable();
         final int hashCode = getHashCode( key );
         final int index = getHashTableIndex( hashCode, table.length );
 
-        for ( Entry e = table[index], pre = null; e != null; pre = e, e = e.next )
+        for ( WeakEntry<K, V> e = table[index], pre = null; e != null; pre = e, e = e.next )
         {
             if ( e.hashCode == hashCode && e.get() == key )
             {
@@ -395,7 +398,7 @@ public final class WeakIdentityHashMap implements Map
                 this.decreaseSize();
                 this.modifications++;
 
-                final Object removed = e.value;
+                final V removed = e.value;
                 e.removed = true;
                 e.value = null;
                 e.next = null;
@@ -417,16 +420,17 @@ public final class WeakIdentityHashMap implements Map
      * @throws NullPointerException if {@code map} is {@code null}, or if {@code map} contains {@code null} keys or
      * values.
      */
-    public void putAll( final Map m )
+    public void putAll( final Map<? extends K, ? extends V> m )
     {
         if ( m == null )
         {
             throw new NullPointerException( "m" );
         }
 
-        for ( final Iterator it = m.entrySet().iterator(); it.hasNext(); )
+        for ( final Iterator<? extends Map.Entry<? extends K, ? extends V>> it = m.entrySet().iterator();
+              it.hasNext(); )
         {
-            final Map.Entry entry = (Map.Entry) it.next();
+            final Map.Entry<? extends K, ? extends V> entry = it.next();
             this.put( entry.getKey(), entry.getValue() );
         }
     }
@@ -436,7 +440,7 @@ public final class WeakIdentityHashMap implements Map
     public void clear()
     {
         this.purge();
-        this.hashTable = new Entry[ this.initialCapacity ];
+        this.hashTable = new WeakEntry[ this.initialCapacity ];
         this.size = 0;
         this.resizeThreshold = this.initialCapacity;
         this.modifications++;
@@ -452,27 +456,18 @@ public final class WeakIdentityHashMap implements Map
      * map, via the {@code Iterator.remove}, {@code Set.remove}, {@code removeAll}, {@code retainAll}, and {@code clear}
      * operations. It does not support the {@code add} or {@code addAll} operations.</p>
      *
-     * @return a set view of the keys contained in this map.
+     * @return A set view of the keys contained in this map.
      */
-    public Set keySet()
+    public Set<K> keySet()
     {
         if ( this.keySet == null )
         {
-            this.keySet = new AbstractSet()
+            this.keySet = new AbstractSet<K>()
             {
 
-                public Iterator iterator()
+                public Iterator<K> iterator()
                 {
-                    return new EntryIterator()
-                    {
-
-                        @Override
-                        public Object next()
-                        {
-                            return ( (Entry) super.next() ).getKey();
-                        }
-
-                    };
+                    return new KeyIterator();
                 }
 
                 public int size()
@@ -496,27 +491,18 @@ public final class WeakIdentityHashMap implements Map
      * from the map, via the {@code Iterator.remove}, {@code Collection.remove}, {@code removeAll}, {@code retainAll}
      * and {@code clear} operations. It does not support the {@code add} or {@code addAll} operations.</p>
      *
-     * @return a collection view of the values contained in this map.
+     * @return A collection view of the values contained in this map.
      */
-    public Collection values()
+    public Collection<V> values()
     {
         if ( this.valueCollection == null )
         {
-            this.valueCollection = new AbstractCollection()
+            this.valueCollection = new AbstractCollection<V>()
             {
 
-                public Iterator iterator()
+                public Iterator<V> iterator()
                 {
-                    return new EntryIterator()
-                    {
-
-                        @Override
-                        public Object next()
-                        {
-                            return ( (Entry) super.next() ).getValue();
-                        }
-
-                    };
+                    return new ValueIterator();
                 }
 
                 public int size()
@@ -540,16 +526,16 @@ public final class WeakIdentityHashMap implements Map
      * {@code Set.remove}, {@code removeAll}, {@code retainAll} and {@code clear} operations. It does not support the
      * {@code add} or {@code addAll} operations.</p>
      *
-     * @return a set view of the mappings contained in this map.
+     * @return A set view of the mappings contained in this map.
      */
-    public Set entrySet()
+    public Set<Map.Entry<K, V>> entrySet()
     {
         if ( this.entrySet == null )
         {
-            this.entrySet = new AbstractSet()
+            this.entrySet = new AbstractSet<Map.Entry<K, V>>()
             {
 
-                public Iterator iterator()
+                public Iterator<Map.Entry<K, V>> iterator()
                 {
                     return new EntryIterator();
                 }
@@ -568,7 +554,7 @@ public final class WeakIdentityHashMap implements Map
     /**
      * Returns a string representation of the object.
      *
-     * @return a string representation of the object.
+     * @return A string representation of the object.
      */
     @Override
     public String toString()
@@ -591,9 +577,9 @@ public final class WeakIdentityHashMap implements Map
     {
         boolean equal = this == o;
 
-        if ( !equal && o instanceof Map )
+        if ( !equal && o instanceof Map<?, ?> )
         {
-            final Map that = (Map) o;
+            final Map<?, ?> that = (Map<?, ?>) o;
             equal = this.entrySet().equals( that.entrySet() );
         }
 
@@ -605,7 +591,7 @@ public final class WeakIdentityHashMap implements Map
      * <p>The hash code of a map is defined to be the sum of the hash codes of each entry in the map's
      * {@code entrySet()} view.</p>
      *
-     * @return the hash code value for this map.
+     * @return The hash code value for this map.
      */
     @Override
     public int hashCode()
@@ -616,15 +602,15 @@ public final class WeakIdentityHashMap implements Map
     /**
      * Creates a string representing the mappings of the instance.
      *
-     * @return a string representing the mappings of the instance.
+     * @return A string representing the mappings of the instance.
      */
     private String internalString()
     {
         final StringBuilder buf = new StringBuilder( 12 * this.size() ).append( '{' );
-        final Entry[] table = this.getHashTable();
+        final WeakEntry<K, V>[] table = this.getHashTable();
         for ( int i = table.length - 1, index = 0; i >= 0; i-- )
         {
-            for ( Entry e = table[i]; e != null; e = e.next )
+            for ( WeakEntry<K, V> e = table[i]; e != null; e = e.next )
             {
                 if ( buf.length() > 1 )
                 {
@@ -656,7 +642,7 @@ public final class WeakIdentityHashMap implements Map
      * @param hashCode The hash code value to return the index of.
      * @param capacity The capacity to return an index for.
      *
-     * @return the index of {@code hashCode} for {@code capacity}.
+     * @return The index of {@code hashCode} for {@code capacity}.
      */
     private static int getHashTableIndex( final int hashCode, final int capacity )
     {
@@ -668,21 +654,22 @@ public final class WeakIdentityHashMap implements Map
      * <p>This method creates a new hash-table and re-hashes any mappings whenever the size of the map gets greater than
      * the capacity of the internal hash-table times the load factor value.</p>
      *
-     * @return the hash-table backing the instance.
+     * @return The hash-table backing the instance.
      */
-    private Entry[] getHashTable()
+    private WeakEntry<K, V>[] getHashTable()
     {
         if ( this.hashTable.length < this.resizeThreshold )
         {
-            final Entry[] table = new Entry[ this.calculateCapacity() ];
+            @SuppressWarnings( "unchecked" )
+            final WeakEntry<K, V>[] table = new WeakEntry[ this.calculateCapacity() ];
 
             for ( int i = this.hashTable.length - 1; i >= 0; i-- )
             {
-                Entry entry = this.hashTable[i];
+                WeakEntry<K, V> entry = this.hashTable[i];
 
                 while ( entry != null )
                 {
-                    final Entry next = entry.next;
+                    final WeakEntry<K, V> next = entry.next;
                     final int index = getHashTableIndex( entry.hashCode, table.length );
 
                     entry.next = table[index];
@@ -702,13 +689,13 @@ public final class WeakIdentityHashMap implements Map
     /** Removes any garbage collected entries. */
     private void purge()
     {
-        Entry purge;
+        WeakEntry<K, V> purge;
 
-        while ( ( purge = (Entry) this.referenceQueue.poll() ) != null )
+        while ( ( purge = (WeakEntry<K, V>) this.referenceQueue.poll() ) != null )
         {
             final int index = getHashTableIndex( purge.hashCode, this.hashTable.length );
 
-            for ( Entry e = this.hashTable[index], pre = null; e != null; pre = e, e = e.next )
+            for ( WeakEntry<K, V> e = this.hashTable[index], pre = null; e != null; pre = e, e = e.next )
             {
                 if ( e == purge )
                 {
@@ -769,12 +756,12 @@ public final class WeakIdentityHashMap implements Map
         return capacity;
     }
 
-    private Entry getEntry( final Object key )
+    private WeakEntry<K, V> getEntry( final Object key )
     {
         final int hashCode = getHashCode( key );
-        final Entry[] table = getHashTable();
+        final WeakEntry<K, V>[] table = getHashTable();
 
-        for ( Entry e = table[getHashTableIndex( hashCode, table.length )]; e != null; e = e.next )
+        for ( WeakEntry<K, V> e = table[getHashTableIndex( hashCode, table.length )]; e != null; e = e.next )
         {
             if ( e.hashCode == hashCode && e.get() == key )
             {
@@ -793,16 +780,19 @@ public final class WeakIdentityHashMap implements Map
      * entry is undefined if the backing map has been modified after the entry was returned by the iterator, except
      * through the {@code setValue} operation on the map entry.</p>
      *
+     * @param <K> The type of the key.
+     * @param <V> The type of the value.
+     *
      * @see WeakIdentityHashMap#entrySet()
      */
-    private static class Entry extends WeakReference implements Map.Entry
+    private static class WeakEntry<K, V> extends WeakReference<K> implements Map.Entry<K, V>
     {
 
         /** The value of the entry. */
-        private Object value;
+        private V value;
 
         /** The next entry in the bucket. */
-        private Entry next;
+        private WeakEntry<K, V> next;
 
         /** Flag indicating that this entry got removed from the map. */
         private boolean removed;
@@ -810,7 +800,7 @@ public final class WeakIdentityHashMap implements Map
         /** The hash code value of the key. */
         private final int hashCode;
 
-        Entry( final Object key, final Object value, final int hashCode, final ReferenceQueue queue )
+        WeakEntry( final K key, final V value, final int hashCode, final ReferenceQueue<K> queue )
         {
             super( key, queue );
             this.hashCode = hashCode;
@@ -825,9 +815,9 @@ public final class WeakIdentityHashMap implements Map
          * @throws IllegalStateException if the entry got removed from the backing map (either due to an iterator's
          * {@code remove} operation or due to the key having been garbage collected).
          */
-        public Object getKey()
+        public K getKey()
         {
-            final Object key = this.get();
+            final K key = this.get();
 
             if ( key == null || this.removed )
             {
@@ -840,12 +830,12 @@ public final class WeakIdentityHashMap implements Map
         /**
          * Gets the value corresponding to this entry.
          *
-         * @return the value corresponding to this entry.
+         * @return The value corresponding to this entry.
          *
          * @throws IllegalStateException if the entry got removed from the backing map (either due to an iterator's
          * {@code remove} operation or due to the key having been garbage collected).
          */
-        public Object getValue()
+        public V getValue()
         {
             if ( this.get() == null || this.removed )
             {
@@ -860,13 +850,13 @@ public final class WeakIdentityHashMap implements Map
          *
          * @param value The new value to be stored in this entry.
          *
-         * @return old value corresponding to the entry.
+         * @return The old value corresponding to the entry.
          *
          * @throws NullPointerException if {@code value} is {@code null}.
          * @throws IllegalStateException if the entry got removed from the backing map (either due to an iterator's
          * {@code remove} operation or due to the key having been garbage collected).
          */
-        public Object setValue( final Object value )
+        public V setValue( final V value )
         {
             if ( value == null )
             {
@@ -877,7 +867,7 @@ public final class WeakIdentityHashMap implements Map
                 throw new IllegalStateException();
             }
 
-            final Object oldValue = this.getValue();
+            final V oldValue = this.getValue();
 
             if ( value != oldValue && !value.equals( oldValue ) )
             {
@@ -890,7 +880,7 @@ public final class WeakIdentityHashMap implements Map
         /**
          * Returns a string representation of the object.
          *
-         * @return a string representation of the object.
+         * @return A string representation of the object.
          */
         @Override
         public String toString()
@@ -917,9 +907,9 @@ public final class WeakIdentityHashMap implements Map
         {
             boolean equal = this == o;
 
-            if ( !equal && o instanceof Map.Entry )
+            if ( !equal && o instanceof Map.Entry<?, ?> )
             {
-                final Map.Entry that = (Map.Entry) o;
+                final Map.Entry<?, ?> that = (Map.Entry<?, ?>) o;
                 equal = this.getKey() == that.getKey() && this.getValue().equals( that.getValue() );
             }
 
@@ -934,7 +924,7 @@ public final class WeakIdentityHashMap implements Map
          * ( e.getValue() == null ? 0 : e.getValue().hashCode() )
          * </blockquote></pre></p>
          *
-         * @return the hash code value for this map entry.
+         * @return The hash code value for this map entry.
          */
         @Override
         public int hashCode()
@@ -945,7 +935,7 @@ public final class WeakIdentityHashMap implements Map
         /**
          * Creates a string representing the properties of the instance.
          *
-         * @return a string representing the properties of the instance.
+         * @return A string representing the properties of the instance.
          */
         private String internalString()
         {
@@ -956,15 +946,15 @@ public final class WeakIdentityHashMap implements Map
 
     }
 
-    /** An iterator over the hash-table backing the implementation. */
-    private class EntryIterator implements Iterator
+    /** Base iterator implementation over the hash-table backing the implementation. */
+    private class WeakEntryIterator
     {
 
         /** The next element in the iteration. */
-        private Entry next;
+        private WeakEntry<K, V> next;
 
         /** The current element in the iteration. */
-        private Entry current;
+        private WeakEntry<K, V> current;
 
         /** The current index into the hash-table. */
         private int index;
@@ -972,10 +962,10 @@ public final class WeakIdentityHashMap implements Map
         /** The number of modifications when this iterator got created. */
         private int modifications;
 
-        /** Creates a new {@code EntryIterator} instance. */
-        EntryIterator()
+        /** Creates a new {@code WeakEntryIterator} instance. */
+        WeakEntryIterator()
         {
-            final Entry[] table = getHashTable();
+            final WeakEntry<K, V>[] table = getHashTable();
             for ( this.index = table.length - 1; this.index >= 0; this.index-- )
             {
                 if ( table[this.index] != null )
@@ -1007,11 +997,11 @@ public final class WeakIdentityHashMap implements Map
         /**
          * Gets the next element in the iteration.
          *
-         * @return the next element in the iteration.
+         * @return The next element in the iteration.
          *
          * @throws NoSuchElementException if the iterator does not have more elements.
          */
-        public Object next()
+        public Map.Entry<K, V> nextElement()
         {
             if ( this.modifications != WeakIdentityHashMap.this.modifications )
             {
@@ -1031,7 +1021,7 @@ public final class WeakIdentityHashMap implements Map
             else
             {
                 this.next = null;
-                final Entry[] table = getHashTable();
+                final WeakEntry<K, V>[] table = getHashTable();
                 for ( ; this.index >= 0; this.index-- )
                 {
                     if ( table[this.index] != null )
@@ -1062,7 +1052,7 @@ public final class WeakIdentityHashMap implements Map
                 throw new IllegalStateException();
             }
 
-            final Object key = this.current.getKey();
+            final K key = this.current.getKey();
 
             if ( key == null )
             {
@@ -1072,6 +1062,78 @@ public final class WeakIdentityHashMap implements Map
             WeakIdentityHashMap.this.remove( key );
             this.modifications = WeakIdentityHashMap.this.modifications;
             this.current = null;
+        }
+
+    }
+
+    /** Iterator over the hash-table backing the implementation. */
+    private class EntryIterator extends WeakEntryIterator implements Iterator<Map.Entry<K, V>>
+    {
+
+        /** Creates a new {@code EntryIterator} instance. */
+        EntryIterator()
+        {
+            super();
+        }
+
+        /**
+         * Gets the next element in the iteration.
+         *
+         * @return The next element in the iteration.
+         *
+         * @throws NoSuchElementException if the iterator does not have more elements.
+         */
+        public Map.Entry<K, V> next()
+        {
+            return super.nextElement();
+        }
+
+    }
+
+    /** Iterator over the hash-table backing the implementation. */
+    private class KeyIterator extends WeakEntryIterator implements Iterator<K>
+    {
+
+        /** Creates a new {@code KeyIterator} instance. */
+        KeyIterator()
+        {
+            super();
+        }
+
+        /**
+         * Gets the next element in the iteration.
+         *
+         * @return The next element in the iteration.
+         *
+         * @throws NoSuchElementException if the iterator does not have more elements.
+         */
+        public K next()
+        {
+            return super.nextElement().getKey();
+        }
+
+    }
+
+    /** Iterator over the hash-table backing the implementation. */
+    private class ValueIterator extends WeakEntryIterator implements Iterator<V>
+    {
+
+        /** Creates a new {@code ValueIterator} instance. */
+        ValueIterator()
+        {
+            super();
+        }
+
+        /**
+         * Gets the next element in the iteration.
+         *
+         * @return The next element in the iteration.
+         *
+         * @throws NoSuchElementException if the iterator does not have more elements.
+         */
+        public V next()
+        {
+            return super.nextElement().getValue();
         }
 
     }

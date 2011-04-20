@@ -335,7 +335,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
             throw new NullPointerException( "value" );
         }
 
-        final int hashCode = getHashCode( key );
+        final int hashCode = System.identityHashCode( key );
         final WeakEntry<K, V>[] table = this.getHashTable();
         final int index = getHashTableIndex( hashCode, table.length );
 
@@ -379,7 +379,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
         }
 
         final WeakEntry<K, V>[] table = this.getHashTable();
-        final int hashCode = getHashCode( key );
+        final int hashCode = System.identityHashCode( key );
         final int index = getHashTableIndex( hashCode, table.length );
 
         for ( WeakEntry<K, V> e = table[index], pre = null; e != null; pre = e, e = e.next )
@@ -625,18 +625,6 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
     }
 
     /**
-     * Gets a hash-code value for a given key.
-     *
-     * @param key The key to get a hash-code value for.
-     *
-     * @return Hash-code value of {@code key}.
-     */
-    private static int getHashCode( final Object key )
-    {
-        return System.identityHashCode( key );
-    }
-
-    /**
      * Gets the index of a hash code value.
      *
      * @param hashCode The hash code value to return the index of.
@@ -758,7 +746,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
 
     private WeakEntry<K, V> getEntry( final Object key )
     {
-        final int hashCode = getHashCode( key );
+        final int hashCode = System.identityHashCode( key );
         final WeakEntry<K, V>[] table = getHashTable();
 
         for ( WeakEntry<K, V> e = table[getHashTableIndex( hashCode, table.length )]; e != null; e = e.next )

@@ -53,7 +53,7 @@ public class VersionParserTest
     }
 
     @Test
-    public final void testCompare() throws Exception
+    public final void testVersionParser() throws Exception
     {
         assertEquals( 0, VersionParser.compare( "1.0", "1.0" ) );
         assertTrue( VersionParser.compare( "1.0-alpha-1", "1.0-alpha-2" ) < 0 );

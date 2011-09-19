@@ -66,7 +66,7 @@ public class TrailingWhitespaceEditorTest extends LineEditorTest
     }
 
     @Test
-    public final void testTrailingWhitespace() throws Exception
+    public final void testTrailingWhitespaceEditor() throws Exception
     {
         assertEquals( this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "\t     " ) );
         assertEquals( this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "\t     \n" ) );

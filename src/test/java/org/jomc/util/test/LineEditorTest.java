@@ -124,7 +124,7 @@ public class LineEditorTest
     }
 
     @Test
-    public final void testEdit() throws Exception
+    public final void testLineEditor() throws Exception
     {
         assertEquals( "", this.getLineEditor().edit( "" ) );
         assertEquals( this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "\n" ) );

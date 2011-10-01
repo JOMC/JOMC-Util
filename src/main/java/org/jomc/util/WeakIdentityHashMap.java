@@ -27,7 +27,7 @@
  *   OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  *   ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- *   $Id$
+ *   $JOMC$
  *
  */
 package org.jomc.util;
@@ -90,7 +90,7 @@ import java.util.Set;
  * @param <V> The type of mapped values.
  *
  * @author <a href="mailto:schulte2005@users.sourceforge.net">Christian Schulte</a>
- * @version $Id$
+ * @version $JOMC$
  *
  * @see java.util.HashMap
  * @see java.util.WeakHashMap

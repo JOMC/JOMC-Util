@@ -27,7 +27,7 @@
  *   OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  *   ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- *   $Id$
+ *   $JOMC$
  *
  */
 package org.jomc.util;
@@ -47,7 +47,7 @@ import java.util.Stack;
  * calling method {@code getOutput}. Parsing is backed by methods {@code getSection} and {@code isSectionFinished}.</p>
  *
  * @author <a href="mailto:schulte2005@users.sourceforge.net">Christian Schulte</a>
- * @version $Id$
+ * @version $JOMC$
  *
  * @see #edit(java.lang.String)
  */

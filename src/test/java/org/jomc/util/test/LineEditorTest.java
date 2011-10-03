@@ -31,6 +31,7 @@
 package org.jomc.util.test;
 
 import org.jomc.util.LineEditor;
+import org.jomc.util.test.support.NullEditor;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -90,6 +91,18 @@ public class LineEditorTest
     }
 
     /**
+     * Gets a new {@code LineEditor} instance to test taking an editor to chain.
+     *
+     * @param editor The editor to chain.
+     *
+     * @return A new {@code LineEditor} instance to test.
+     */
+    protected LineEditor newLineEditor( final LineEditor editor )
+    {
+        return new LineEditor( editor );
+    }
+
+    /**
      * Gets the name of the encoding used when reading resources.
      *
      * @return The name of the encoding used when reading resources.
@@ -124,9 +137,22 @@ public class LineEditorTest
     @Test
     public final void testLineEditor() throws Exception
     {
-        assertEquals( "", this.getLineEditor().edit( "" ) );
+        assertEquals( this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "" ) );
+        assertEquals( "NO LINE SEPARATOR" + this.getLineEditor().getLineSeparator(),
+                      this.getLineEditor().edit( "NO LINE SEPARATOR" ) );
+
         assertEquals( this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "\n" ) );
         assertNull( this.getLineEditor().edit( null ) );
+    }
+
+    @Test
+    public final void testLineEditorChain() throws Exception
+    {
+        final LineEditor chained = this.newLineEditor( new NullEditor() );
+        assertNull( chained.edit( "" ) );
+        assertNull( chained.edit( "NO LINE SEPARATOR" ) );
+        assertNull( chained.edit( "\n" ) );
+        assertNull( chained.edit( null ) );
     }
 
 }

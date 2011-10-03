@@ -120,18 +120,33 @@ public class LineEditor
     {
         String edited = text;
 
-        if ( text != null )
+        if ( edited != null )
         {
-            final BufferedReader reader = new BufferedReader( new StringReader( text ) );
-            final StringBuilder buf = new StringBuilder( text.length() );
+            final StringBuilder buf = new StringBuilder( edited.length() + 16 );
+            boolean appended = false;
 
-            String line = null;
-            while ( ( line = reader.readLine() ) != null )
+            if ( edited.length() > 0 )
             {
-                final String replacement = this.editLine( line );
+                final BufferedReader reader = new BufferedReader( new StringReader( edited ) );
+
+                String line = null;
+                while ( ( line = reader.readLine() ) != null )
+                {
+                    final String replacement = this.editLine( line );
+                    if ( replacement != null )
+                    {
+                        buf.append( replacement ).append( this.getLineSeparator() );
+                        appended = true;
+                    }
+                }
+            }
+            else
+            {
+                final String replacement = this.editLine( edited );
                 if ( replacement != null )
                 {
                     buf.append( replacement ).append( this.getLineSeparator() );
+                    appended = true;
                 }
             }
 
@@ -139,14 +154,15 @@ public class LineEditor
             if ( replacement != null )
             {
                 buf.append( replacement );
+                appended = true;
             }
 
-            edited = buf.toString();
+            edited = appended ? buf.toString() : null;
+        }
 
-            if ( this.editor != null )
-            {
-                edited = this.editor.edit( edited );
-            }
+        if ( this.editor != null )
+        {
+            edited = this.editor.edit( edited );
         }
 
         return edited;

@@ -42,6 +42,15 @@
     <release version="1.1" date="2010-07-28"/>
     <!-- *********************************************************************************************************** -->
     <release version="1.2">
+      <action type="fix" dev="schulte2005"><![CDATA[Corrected method <code>edit</code> of class
+      <code>org.jomc.util.LineEditor</code> to return <code>null</code> instead of an empty string if method
+      <code>editLine</code> returns <code>null</code> for all input lines and to correctly append the editor's line
+      separator on lines with a length equal to zero.]]>
+      </action>
+      <action type="fix" dev="schulte2005"><![CDATA[Corrected method <code>edit</code> of class
+      <code>org.jomc.util.LineEditor</code> to chain also if method <code>editLine</code> returns <code>null</code> for
+      all input lines.]]>
+      </action>
       <action type="update" dev="schulte2005"><![CDATA[Generified class <code>org.jomc.util.WeakIdentityHashMap</code>.]]>
       </action>
     </release>

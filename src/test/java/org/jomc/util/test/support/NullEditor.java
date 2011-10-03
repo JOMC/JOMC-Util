@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) Christian Schulte, 2005-07-25
+ *   Copyright (C) Christian Schulte, 2011-10-02
  *   All rights reserved.
  *
  *   Redistribution and use in source and binary forms, with or without
@@ -28,55 +28,66 @@
  *   $JOMC$
  *
  */
-package org.jomc.util.test;
+package org.jomc.util.test.support;
 
 import org.jomc.util.LineEditor;
-import org.jomc.util.TrailingWhitespaceEditor;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
 
 /**
- * Test cases for class {@code org.jomc.util.TrailingWhitespaceEditor}.
+ * {@code LineEditor} removing all input.
  *
  * @author <a href="mailto:schulte2005@users.sourceforge.net">Christian Schulte</a>
  * @version $JOMC$
+ *
+ * @see #edit(java.lang.String)
  */
-public class TrailingWhitespaceEditorTest extends LineEditorTest
+public final class NullEditor extends LineEditor
 {
 
-    /** Creates a new {@code TrailingWhitespaceEditorTest} instance. */
-    public TrailingWhitespaceEditorTest()
+    /** Creates a new {@code NullEditor} instance. */
+    public NullEditor()
     {
-        super();
+        this( null, null );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Creates a new {@code NullEditor} instance taking a string to use for separating lines.
+     *
+     * @param lineSeparator String to use for separating lines.
+     */
+    public NullEditor( final String lineSeparator )
+    {
+        this( null, lineSeparator );
+    }
+
+    /**
+     * Creates a new {@code NullEditor} instance taking an editor to chain.
+     *
+     * @param editor The editor to chain.
+     */
+    public NullEditor( final LineEditor editor )
+    {
+        this( editor, null );
+    }
+
+    /**
+     * Creates a new {@code NullEditor} instance taking an editor to chain and a string to use for separating lines.
+     *
+     * @param editor The editor to chain.
+     * @param lineSeparator String to use for separating lines.
+     */
+    public NullEditor( final LineEditor editor, final String lineSeparator )
+    {
+        super( editor, lineSeparator );
+    }
+
+    /**
+     * {@inheritDoc}
+     * @return This method returns {@code null}.
+     */
     @Override
-    public TrailingWhitespaceEditor getLineEditor()
+    protected String editLine( final String line )
     {
-        return (TrailingWhitespaceEditor) super.getLineEditor();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    protected TrailingWhitespaceEditor newLineEditor()
-    {
-        return new TrailingWhitespaceEditor();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    protected TrailingWhitespaceEditor newLineEditor( final LineEditor editor )
-    {
-        return new TrailingWhitespaceEditor( editor );
-    }
-
-    @Test
-    public final void testTrailingWhitespaceEditor() throws Exception
-    {
-        assertEquals( this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "\t     " ) );
-        assertEquals( this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "\t     \n" ) );
-        assertEquals( "   X" + this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "   X " ) );
+        return null;
     }
 
 }

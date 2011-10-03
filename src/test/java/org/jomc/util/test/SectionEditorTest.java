@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import org.apache.commons.io.IOUtils;
+import org.jomc.util.LineEditor;
 import org.jomc.util.Section;
 import org.jomc.util.SectionEditor;
 import org.junit.Test;
@@ -93,6 +94,13 @@ public class SectionEditorTest extends LineEditorTest
             }
 
         };
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected SectionEditor newLineEditor( final LineEditor editor )
+    {
+        return new SectionEditor( editor );
     }
 
     @Test

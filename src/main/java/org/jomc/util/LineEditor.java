@@ -155,9 +155,9 @@ public class LineEditor
     /**
      * Edits a line.
      *
-     * @param line The line to edit or {@code null} indicating the end of input.
+     * @param line The line to edit or {@code null}, indicating the end of input.
      *
-     * @return The string to replace {@code line} with, or {@code null} to replace {@code line} with nothing.
+     * @return The string to replace {@code line} with or {@code null}, to replace {@code line} with nothing.
      *
      * @throws IOException if editing fails.
      */

@@ -167,6 +167,9 @@ public class Section
 
     /**
      * Gets the child sections of this section.
+     * <p>This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make
+     * to the returned list will be present inside the object. This is why there is no {@code set} method for the
+     * sections property.</p>
      *
      * @return A list of child sections of this section.
      */
@@ -185,7 +188,7 @@ public class Section
      *
      * @param sectionName The name of the section to return.
      *
-     * @return The child section matching {@code sectionName} or {@code null} if no such section is found.
+     * @return The first child section matching {@code sectionName} or {@code null}, if no such section is found.
      *
      * @throws NullPointerException if {@code sectionName} is {@code null}.
      */

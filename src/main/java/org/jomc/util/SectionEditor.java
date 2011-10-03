@@ -200,9 +200,9 @@ public class SectionEditor extends LineEditor
     /**
      * Parses the given line to mark the start of a new section.
      *
-     * @param line The line to parse.
+     * @param line The line to parse or {@code null}.
      *
-     * @return The section starting at {@code line} or {@code null} if {@code line} does not mark the start of a
+     * @return The section starting at {@code line} or {@code null}, if {@code line} does not mark the start of a
      * section.
      */
     protected Section getSection( final String line )
@@ -228,10 +228,10 @@ public class SectionEditor extends LineEditor
     /**
      * Parses the given line to mark the end of a section.
      *
-     * @param line The line to parse.
+     * @param line The line to parse or {@code null}.
      *
-     * @return {@code true} if {@code line} marks the end of a section; {@code false} if {@code line} does not mark the
-     * end of a section.
+     * @return {@code true}, if {@code line} marks the end of a section; {@code false}, if {@code line} does not mark
+     * the end of a section.
      */
     protected boolean isSectionFinished( final String line )
     {
@@ -310,10 +310,10 @@ public class SectionEditor extends LineEditor
     /**
      * Gets a flag indicating that the input of the editor contained a named section.
      *
-     * @param sectionName The name of the section to test.
+     * @param sectionName The name of the section to test or {@code null}.
      *
-     * @return {@code true} if the input of the editor contained a section with name {@code sectionName};
-     * {@code false} if the input of the editor did not contain a section with name {@code sectionName}.
+     * @return {@code true}, if the input of the editor contained a section with name {@code sectionName};
+     * {@code false}, if the input of the editor did not contain a section with name {@code sectionName}.
      */
     public boolean isSectionPresent( final String sectionName )
     {

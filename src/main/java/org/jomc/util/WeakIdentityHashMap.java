@@ -222,8 +222,8 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
     /**
      * Gets a flag indicating if this map is empty.
      *
-     * @return {@code true} if this map contains no key-value mappings; {@code false} if this map contains at least one
-     * mapping.
+     * @return {@code true}, if this map contains no key-value mappings; {@code false}, if this map contains at least
+     * one mapping.
      */
     public boolean isEmpty()
     {
@@ -232,13 +232,13 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
 
     /**
      * Gets a flag indicating if this map contains a mapping for a given key.
-     * <p>More formally, returns {@code true} if and only if this map contains a mapping for a key {@code k} such that
+     * <p>More formally, returns {@code true}, if and only if this map contains a mapping for a key {@code k} such that
      * {@code key==k}. There can be at most one such mapping.</p>
      *
      * @param key The key whose presence in this map is to be tested.
      *
-     * @return {@code true} if this map contains a mapping for {@code key}; {@code false} if this map does not contain a
-     * mapping for {@code key}.
+     * @return {@code true}, if this map contains a mapping for {@code key}; {@code false}, if this map does not contain
+     * a mapping for {@code key}.
      *
      * @throws NullPointerException if {@code key} is {@code null}.
      */
@@ -254,12 +254,12 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
 
     /**
      * Gets a flag indicating if this map maps one or more keys to the specified value.
-     * <p>More formally, this method returns {@code true} if and only if this map contains at least one mapping to a
+     * <p>More formally, this method returns {@code true}, if and only if this map contains at least one mapping to a
      * value {@code v} such that {@code value.equals(v)}. This operation requires time linear in the map size.</p>
      *
      * @param value The value whose presence in this map is to be tested.
      *
-     * @return {@code true} if this map maps one or more keys to {@code value}; {@code false} if this map does not map
+     * @return {@code true}, if this map maps one or more keys to {@code value}; {@code false}, if this map does not map
      * any key to {@code value}.
      *
      * @throws NullPointerException if {@code value} is {@code null}.
@@ -288,14 +288,14 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
     }
 
     /**
-     * Gets the value to which a given key is mapped, or {@code null} if this map contains no mapping for that key.
+     * Gets the value to which a given key is mapped or {@code null}, if this map contains no mapping for that key.
      * <p>More formally, if this map contains a mapping from a key {@code k} to a value {@code v} such that
      * {@code key==k}, then this method returns {@code v}; otherwise it returns {@code null}. There can be at most one
      * such mapping.</p>
      *
      * @param key The key whose associated value is to be returned.
      *
-     * @return The value to which {@code key} is mapped, or {@code null} if this map contains no mapping for
+     * @return The value to which {@code key} is mapped or {@code null}, if this map contains no mapping for
      * {@code key}.
      *
      * @throws NullPointerException if {@code key} is {@code null}.
@@ -317,7 +317,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
      * @param key The key with which {@code value} is to be associated.
      * @param value The value to be associated with {@code key}.
      *
-     * @return The value previously associated with {@code key}, or {@code null} if there was no mapping for
+     * @return The value previously associated with {@code key} or {@code null}, if there was no mapping for
      * {@code key}.
      *
      * @throws NullPointerException if {@code key} or {@code value} is {@code null}.
@@ -364,7 +364,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
      *
      * @param key The key whose mapping is to be removed from the map.
      *
-     * @return The value previously associated with {@code key}, or {@code null} if there was no mapping for
+     * @return The value previously associated with {@code key} or {@code null}, if there was no mapping for
      * {@code key}.
      *
      * @throws NullPointerException if {@code key} is {@code null}.
@@ -562,13 +562,13 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
 
     /**
      * Compares the specified object with this map for equality.
-     * <p>Returns {@code true} if the given object is also a map and the two maps represent the same mappings. More
+     * <p>Returns {@code true}, if the given object is also a map and the two maps represent the same mappings. More
      * formally, two maps {@code m1} and {@code m2} represent the same mappings if
      * {@code m1.entrySet().equals(m2.entrySet())}.</p>
      *
      * @param o The object to be compared for equality with this map.
      *
-     * @return {@code true} if {@code o} is equal to this map; {@code false} if {@code o} is not equal to this map.
+     * @return {@code true}, if {@code o} is equal to this map; {@code false}, if {@code o} is not equal to this map.
      */
     @Override
     public boolean equals( final Object o )
@@ -876,7 +876,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
 
         /**
          * Compares a given object with this entry for equality.
-         * <p>Returns {@code true} if the given object is also a map entry and the two entries represent the same
+         * <p>Returns {@code true}, if the given object is also a map entry and the two entries represent the same
          * mapping. More formally, two entries {@code e1} and {@code e2} represent the same mapping if
          * <pre><blockquote>
          * ( e1.getKey() == e2.getKey() )  &amp;&amp;
@@ -885,8 +885,8 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
          *
          * @param o The object to be compared for equality with this map entry.
          *
-         * @return {@code true} if {@code o} is equal to this map entry; {@code false} if {@code o} is not equal to this
-         * map entry.
+         * @return {@code true}, if {@code o} is equal to this map entry; {@code false}, if {@code o} is not equal to
+         * this map entry.
          */
         @Override
         public boolean equals( final Object o )
@@ -967,7 +967,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
         /**
          * Gets a flag indicating that the iteration has more elements.
          *
-         * @return {@code true} if the iterator has more elements; {@code false} if the iterator does not have more
+         * @return {@code true}, if the iterator has more elements; {@code false}, if the iterator does not have more
          * elements.
          */
         public boolean hasNext()

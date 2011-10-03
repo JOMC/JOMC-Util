@@ -68,7 +68,8 @@ public final class TrailingWhitespaceEditor extends LineEditor
     }
 
     /**
-     * Creates a new {@code TrailingWhitespaceEditor} instance taking an editor to chain and a string to use for separating lines.
+     * Creates a new {@code TrailingWhitespaceEditor} instance taking an editor to chain and a string to use for
+     * separating lines.
      *
      * @param editor The editor to chain.
      * @param lineSeparator String to use for separating lines.

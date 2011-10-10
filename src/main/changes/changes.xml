@@ -42,6 +42,9 @@
     <release version="1.1" date="2010-07-28"/>
     <!-- *********************************************************************************************************** -->
     <release version="1.2">
+      <action type="add" dev="schulte2005"><![CDATA[Added method <code>getLineNumber</code> to class
+      <code>org.jomc.util.LineEditor</code>.]]>
+      </action>
       <action type="fix" dev="schulte2005"><![CDATA[Corrected method <code>edit</code> of class
       <code>org.jomc.util.LineEditor</code> to return <code>null</code> instead of an empty string if method
       <code>editLine</code> returns <code>null</code> for all input lines and to correctly append the editor's line

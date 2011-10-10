@@ -138,11 +138,15 @@ public class LineEditorTest
     public final void testLineEditor() throws Exception
     {
         assertEquals( this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "" ) );
+        assertEquals( 1, this.getLineEditor().getLineNumber() );
         assertEquals( "NO LINE SEPARATOR" + this.getLineEditor().getLineSeparator(),
                       this.getLineEditor().edit( "NO LINE SEPARATOR" ) );
 
+        assertEquals( 1, this.getLineEditor().getLineNumber() );
         assertEquals( this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "\n" ) );
+        assertEquals( 1, this.getLineEditor().getLineNumber() );
         assertNull( this.getLineEditor().edit( null ) );
+        assertEquals( 0, this.getLineEditor().getLineNumber() );
     }
 
     @Test
@@ -150,9 +154,13 @@ public class LineEditorTest
     {
         final LineEditor chained = this.newLineEditor( new NullEditor() );
         assertNull( chained.edit( "" ) );
+        assertEquals( 1, chained.getLineNumber() );
         assertNull( chained.edit( "NO LINE SEPARATOR" ) );
+        assertEquals( 1, chained.getLineNumber() );
         assertNull( chained.edit( "\n" ) );
+        assertEquals( 1, chained.getLineNumber() );
         assertNull( chained.edit( null ) );
+        assertEquals( 0, chained.getLineNumber() );
     }
 
 }

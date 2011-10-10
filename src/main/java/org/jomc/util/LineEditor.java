@@ -51,6 +51,9 @@ public class LineEditor
     /** Line separator. */
     private String lineSeparator;
 
+    /** Current line number. */
+    private long lineNumber;
+
     /** Creates a new {@code LineEditor} instance. */
     public LineEditor()
     {
@@ -88,6 +91,7 @@ public class LineEditor
         super();
         this.editor = editor;
         this.lineSeparator = lineSeparator;
+        this.lineNumber = 0L;
     }
 
     /**
@@ -106,6 +110,18 @@ public class LineEditor
     }
 
     /**
+     * Gets the current line number.
+     *
+     * @return The current line number.
+     *
+     * @since 1.2
+     */
+    public final long getLineNumber()
+    {
+        return this.lineNumber;
+    }
+
+    /**
      * Edits text.
      * <p>This method splits the given string into lines and passes every line to method {@code editLine} in order of
      * occurrence. On end of input, method {@code editLine} is called with a {@code null} argument.</p>
@@ -119,6 +135,7 @@ public class LineEditor
     public final String edit( final String text ) throws IOException
     {
         String edited = text;
+        this.lineNumber = 0L;
 
         if ( edited != null )
         {
@@ -132,6 +149,7 @@ public class LineEditor
                 String line = null;
                 while ( ( line = reader.readLine() ) != null )
                 {
+                    this.lineNumber++;
                     final String replacement = this.editLine( line );
                     if ( replacement != null )
                     {
@@ -142,6 +160,7 @@ public class LineEditor
             }
             else
             {
+                this.lineNumber++;
                 final String replacement = this.editLine( edited );
                 if ( replacement != null )
                 {

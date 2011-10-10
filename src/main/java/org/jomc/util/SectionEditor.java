@@ -146,11 +146,7 @@ public class SectionEditor extends LineEditor
                 if ( this.stack.isEmpty() )
                 {
                     this.stack = null;
-                    throw new IOException( this.getMessage( "unexpectedEndOfSection", new Object[]
-                        {
-                            s.getName() == null ? "/" : s.getName()
-                        } ) );
-
+                    throw new IOException( getMessage( "unexpectedEndOfSection", this.getLineNumber() ) );
                 }
 
                 if ( this.stack.peek().getName() == null && this.stack.size() > 1 )
@@ -183,11 +179,7 @@ public class SectionEditor extends LineEditor
             if ( !this.stack.isEmpty() )
             {
                 this.stack = null;
-                throw new IOException( this.getMessage( "unexpectedEndOfSection", new Object[]
-                    {
-                        root.getName() == null ? "/" : root.getName()
-                    } ) );
-
+                throw new IOException( getMessage( "unexpectedEndOfFile", this.getLineNumber(), root.getName() ) );
             }
 
             replacement = this.getOutput( root );
@@ -277,7 +269,7 @@ public class SectionEditor extends LineEditor
         }
 
         this.editSection( section );
-        for ( int i = 0, l = section.getSections().size(); i < l; i++ )
+        for ( int i = 0, s0 = section.getSections().size(); i < s0; i++ )
         {
             this.editSections( section.getSections().get( i ) );
         }
@@ -354,10 +346,10 @@ public class SectionEditor extends LineEditor
         return buffer;
     }
 
-    private String getMessage( final String key, final Object arguments )
+    private static String getMessage( final String key, final Object... arguments )
     {
-        return new MessageFormat( ResourceBundle.getBundle( SectionEditor.class.getName().
-            replace( '.', '/' ) ).getString( key ) ).format( arguments );
+        return MessageFormat.format( ResourceBundle.getBundle( SectionEditor.class.getName().
+            replace( '.', '/' ) ).getString( key ), arguments );
 
     }
 

@@ -54,6 +54,11 @@
       <code>org.jomc.util.LineEditor</code> to chain also if method <code>editLine</code> returns <code>null</code> for
       all input lines.]]>
       </action>
+      <action type="fix" dev="schulte2005"><![CDATA[Corrected method <code>iterator</code> of the collection view
+      objects returned by methods <code>entrySet</code>, <code>keySet</code> and <code>values</code> of class
+      <code>org.jomc.util.WeakIdentityHashMap</code> to return <code>Iterator</code> objects throwing
+      <code>ConcurrentModificationException</code>s also for entries removed due to the garbage collector.]]>
+      </action>
       <action type="update" dev="schulte2005"><![CDATA[Generified class <code>org.jomc.util.WeakIdentityHashMap</code>.]]>
       </action>
     </release>

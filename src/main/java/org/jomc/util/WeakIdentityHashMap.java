@@ -108,7 +108,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
     private static final float DEFAULT_LOAD_FACTOR = 0.75F;
 
     /** The number of times the map got structurally modified. */
-    private volatile int modifications;
+    private int modifications;
 
     /** The number of mappings held by the map. */
     private int size;
@@ -394,7 +394,6 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
                 }
 
                 this.decreaseSize();
-                this.modifications++;
 
                 final V removed = e.value;
                 e.removed = true;
@@ -723,6 +722,8 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
         {
             this.size--;
         }
+
+        this.modifications++;
     }
 
     private int calculateCapacity()

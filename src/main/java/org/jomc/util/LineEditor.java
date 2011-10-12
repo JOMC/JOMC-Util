@@ -157,6 +157,7 @@ public class LineEditor
                         appended = true;
                     }
                 }
+                reader.close();
             }
             else
             {

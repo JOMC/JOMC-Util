@@ -68,10 +68,12 @@ PARSER_BEGIN(VersionParser)
 package org.jomc.util;
 
 import java.io.StringReader;
+import java.text.MessageFormat;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Locale;
-import java.text.NumberFormat;
+import java.util.ResourceBundle;
 
 /**
  * Parses and compares version identifiers.
@@ -136,12 +138,17 @@ public final class VersionParser
         try
         {
             final NumberFormat format = NumberFormat.getNumberInstance( Locale.ENGLISH );
-            final VersionParser versionParser = new VersionParser( new StringReader( v1 ) );
+            final StringReader v1Reader = new StringReader( v1 );
+            final VersionParser versionParser = new VersionParser( v1Reader );
             final Token[] c = versionParser.parse();
-            versionParser.ReInit( new StringReader( v2 ) );
+            final StringReader v2Reader = new StringReader( v2 );
+            versionParser.ReInit( v2Reader );
             final Token[] r = versionParser.parse();
             final int len = Math.max( c.length, r.length );
             int result = 0;
+
+            v1Reader.close();
+            v2Reader.close();
 
             for ( int i = 0; i < len; i++ )
             {
@@ -196,12 +203,7 @@ public final class VersionParser
 
                 if ( current.kind != spec.kind )
                 {
-                    final java.text.MessageFormat f = new java.text.MessageFormat( getMessage( "cannotCompare" ) );
-                    throw new ParseException( f.format( new Object[]
-                        {
-                            current.image, spec.image, v1, v2
-                        } ) );
-
+                    throw new ParseException( getMessage( "cannotCompare", current.image, spec.image, v1, v2 ) );
                 }
 
                 if ( current.kind == VersionParserConstants.IDENTIFIER )
@@ -243,10 +245,11 @@ public final class VersionParser
         }
     }
 
-    private static String getMessage( final String key )
+    private static String getMessage( final String key, final Object... arguments )
     {
-        return java.util.ResourceBundle.getBundle( VersionParser.class.getName().replace( '.', '/' ),
-                                                   java.util.Locale.getDefault() ).getString( key );
+        return MessageFormat.format( ResourceBundle.getBundle( VersionParser.class.getName().replace( '.', '/' ),
+                                                               Locale.getDefault() ).getString( key ),
+                                     arguments );
 
     }
 

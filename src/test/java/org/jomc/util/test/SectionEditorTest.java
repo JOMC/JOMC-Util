@@ -200,8 +200,8 @@ public class SectionEditorTest extends LineEditorTest
         {
             b.append( line ).append( System.getProperty( "line.separator", "\n" ) );
         }
-
         r.close();
+
         return b.toString();
     }
 

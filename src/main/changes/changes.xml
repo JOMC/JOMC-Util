@@ -59,6 +59,9 @@
       <code>org.jomc.util.WeakIdentityHashMap</code> to return <code>Iterator</code> objects throwing
       <code>ConcurrentModificationException</code>s also for entries removed due to the garbage collector.]]>
       </action>
+      <action type="fix" dev="schulte2005"><![CDATA[Added method <code>finalize</code> to class
+      <code>org.jomc.util.WeakIdentityHashMap</code> to remove stale references on finalization.]]>
+      </action>
       <action type="update" dev="schulte2005"><![CDATA[Generified class <code>org.jomc.util.WeakIdentityHashMap</code>.]]>
       </action>
     </release>

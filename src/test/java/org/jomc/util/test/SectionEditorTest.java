@@ -192,27 +192,74 @@ public class SectionEditorTest extends LineEditorTest
 
     private static String convertLineSeparator( final String s ) throws IOException
     {
-        final StringBuilder b = new StringBuilder();
-        final BufferedReader r = new BufferedReader( new StringReader( s ) );
+        BufferedReader reader = null;
+        boolean suppressExceptionOnClose = true;
 
-        String line;
-        while ( ( line = r.readLine() ) != null )
+        try
         {
-            b.append( line ).append( System.getProperty( "line.separator", "\n" ) );
-        }
-        r.close();
+            final StringBuilder b = new StringBuilder();
+            reader = new BufferedReader( new StringReader( s ) );
 
-        return b.toString();
+            String line;
+            while ( ( line = reader.readLine() ) != null )
+            {
+                b.append( line ).append( System.getProperty( "line.separator", "\n" ) );
+            }
+
+            suppressExceptionOnClose = false;
+            return b.toString();
+        }
+        finally
+        {
+            try
+            {
+                if ( reader != null )
+                {
+                    reader.close();
+                }
+            }
+            catch ( final IOException e )
+            {
+                if ( !suppressExceptionOnClose )
+                {
+                    throw e;
+                }
+            }
+        }
     }
 
     private String getResource( final String resourceName ) throws IOException
     {
+
+        InputStream in = null;
+        boolean suppressExceptionOnClose = true;
         assertTrue( resourceName.startsWith( "/" ) );
-        final InputStream in = this.getClass().getResourceAsStream( resourceName );
-        assertNotNull( "Resource '" + resourceName + "' not found.", in );
-        final String content = IOUtils.toString( in, this.getResourceEncoding() );
-        in.close();
-        return content;
+
+        try
+        {
+            in = this.getClass().getResourceAsStream( resourceName );
+            assertNotNull( "Resource '" + resourceName + "' not found.", in );
+            final String content = IOUtils.toString( in, this.getResourceEncoding() );
+            suppressExceptionOnClose = false;
+            return content;
+        }
+        finally
+        {
+            try
+            {
+                if ( in != null )
+                {
+                    in.close();
+                }
+            }
+            catch ( final IOException e )
+            {
+                if ( !suppressExceptionOnClose )
+                {
+                    throw e;
+                }
+            }
+        }
     }
 
 }

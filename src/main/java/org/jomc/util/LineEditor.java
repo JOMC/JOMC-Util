@@ -51,7 +51,10 @@ public class LineEditor
     /** Line separator. */
     private String lineSeparator;
 
-    /** Current line number. */
+    /**
+     * Current line number.
+     * @since 1.2
+     */
     private long lineNumber;
 
     /** Creates a new {@code LineEditor} instance. */

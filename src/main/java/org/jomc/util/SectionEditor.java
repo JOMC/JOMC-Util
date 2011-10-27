@@ -331,7 +331,7 @@ public class SectionEditor extends LineEditor
 
         buffer.append( section.getHeadContent() );
 
-        for ( int i = 0, l = section.getSections().size(); i < l; i++ )
+        for ( int i = 0, s0 = section.getSections().size(); i < s0; i++ )
         {
             this.renderSections( section.getSections().get( i ), buffer );
         }

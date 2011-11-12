@@ -62,6 +62,10 @@
       <action type="fix" dev="schulte2005"><![CDATA[Added method <code>finalize</code> to class
       <code>org.jomc.util.WeakIdentityHashMap</code> to remove pending references on finalization.]]>
       </action>
+      <action type="update" dev="schulte2005"><![CDATA[Updated methods <code>getSection</code> and
+      <code>isSectionFinished</code> of class <code>org.jomc.util.SectionEditor</code> to throw
+      <code>IOException</code>s if parsing section markers fails.]]>
+      </action>
       <action type="update" dev="schulte2005"><![CDATA[Updated class <code>org.jomc.util.WeakIdentityHashMap</code>
       to support generics.]]>
       </action>

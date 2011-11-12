@@ -174,6 +174,16 @@ public class SectionEditorTest extends LineEditorTest
         }
 
         assertEquals( expectedNoSections.toString(), this.getLineEditor().edit( testNoSections.toString() ) );
+
+        try
+        {
+            this.getLineEditor().edit( "SECTION-START[Test\nSECTION-END\n" );
+        }
+        catch ( final IOException e )
+        {
+            assertNotNull( e.getMessage() );
+            System.out.println( e.toString() );
+        }
     }
 
     private void assertUnmatchedSections( final String resourceName ) throws Exception

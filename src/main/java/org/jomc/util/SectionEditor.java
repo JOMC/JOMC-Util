@@ -196,21 +196,29 @@ public class SectionEditor extends LineEditor
      *
      * @return The section starting at {@code line} or {@code null}, if {@code line} does not mark the start of a
      * section.
+     *
+     * @throws IOException if parsing fails.
      */
-    protected Section getSection( final String line )
+    protected Section getSection( final String line ) throws IOException
     {
         Section s = null;
 
         if ( line != null )
         {
-            final int startIndex = line.indexOf( DEFAULT_SECTION_START );
-            if ( startIndex != -1 )
+            final int markerIndex = line.indexOf( DEFAULT_SECTION_START );
+
+            if ( markerIndex != -1 )
             {
-                final String name = line.substring( startIndex + DEFAULT_SECTION_START.length(),
-                                                    line.indexOf( ']', startIndex + DEFAULT_SECTION_START.length() ) );
+                final int startIndex = markerIndex + DEFAULT_SECTION_START.length();
+                final int endIndex = line.indexOf( ']', startIndex );
+
+                if ( endIndex == -1 )
+                {
+                    throw new IOException( getMessage( "sectionMarkerParseFailure", line, this.getLineNumber() ) );
+                }
 
                 s = new Section();
-                s.setName( name );
+                s.setName( line.substring( startIndex, endIndex ) );
             }
         }
 
@@ -224,8 +232,10 @@ public class SectionEditor extends LineEditor
      *
      * @return {@code true}, if {@code line} marks the end of a section; {@code false}, if {@code line} does not mark
      * the end of a section.
+     *
+     * @throws IOException if parsing fails.
      */
-    protected boolean isSectionFinished( final String line )
+    protected boolean isSectionFinished( final String line ) throws IOException
     {
         return line != null && line.indexOf( DEFAULT_SECTION_END ) != -1;
     }

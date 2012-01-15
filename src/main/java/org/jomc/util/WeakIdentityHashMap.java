@@ -597,20 +597,16 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
     }
 
     /**
-     * Finalizes the object by setting any internal state to {@code null} and by polling the internal reference queue
-     * for any pending references.
+     * Finalizes the object by polling the internal reference queue for any pending references.
      *
      * @since 1.2
      */
     @Override
     protected void finalize() throws Throwable
     {
-        super.finalize();
-        this.hashTable = null;
-        this.size = 0;
-        this.resizeThreshold = this.initialCapacity;
         this.modifications++;
         while ( this.referenceQueue.poll() != null );
+        super.finalize();
     }
 
     /**
@@ -1141,4 +1137,5 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
         }
 
     }
+
 }

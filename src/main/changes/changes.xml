@@ -41,7 +41,7 @@
     <!-- *********************************************************************************************************** -->
     <release version="1.1" date="2010-07-28"/>
     <!-- *********************************************************************************************************** -->
-    <release version="1.2">
+    <release version="1.2" date="2012-02-16">
       <action type="add" dev="schulte2005"><![CDATA[Added method <code>getLineNumber</code> to class
       <code>org.jomc.util.LineEditor</code>.]]>
       </action>

@@ -44,7 +44,7 @@ import java.util.Stack;
  * {@code editLine} returns {@code null} during parsing and the output of the editor on end of input, rendered by
  * calling method {@code getOutput}. Parsing is backed by methods {@code getSection} and {@code isSectionFinished}.</p>
  *
- * @author <a href="mailto:schulte2005@users.sourceforge.net">Christian Schulte</a>
+ * @author <a href="mailto:cs@schulte.it">Christian Schulte</a>
  * @version $JOMC$
  *
  * @see #edit(java.lang.String)

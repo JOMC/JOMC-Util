@@ -38,7 +38,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Test cases for class {@code org.jomc.util.TrailingWhitespaceEditor}.
  *
- * @author <a href="mailto:schulte2005@users.sourceforge.net">Christian Schulte</a>
+ * @author <a href="mailto:cs@schulte.it">Christian Schulte</a>
  * @version $JOMC$
  */
 public class TrailingWhitespaceEditorTest extends LineEditorTest

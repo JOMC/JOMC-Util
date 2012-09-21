@@ -89,7 +89,7 @@ import java.util.ResourceBundle;
  * a separator character or an integer.
  * </p>
  *
- * @author <a href="mailto:schulte2005@users.sourceforge.net">Christian Schulte</a>
+ * @author <a href="mailto:cs@schulte.it">Christian Schulte</a>
  * @version $JOMC$
  * @see #compare(String, String)
  */

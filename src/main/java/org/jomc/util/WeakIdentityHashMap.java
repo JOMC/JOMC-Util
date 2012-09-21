@@ -87,7 +87,7 @@ import java.util.Set;
  * @param <K> The type of keys maintained by this map.
  * @param <V> The type of mapped values.
  *
- * @author <a href="mailto:schulte2005@users.sourceforge.net">Christian Schulte</a>
+ * @author <a href="mailto:cs@schulte.it">Christian Schulte</a>
  * @version $JOMC$
  *
  * @see java.util.HashMap

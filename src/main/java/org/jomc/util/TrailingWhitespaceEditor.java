@@ -33,7 +33,7 @@ package org.jomc.util;
 /**
  * {@code LineEditor} removing trailing whitespace.
  *
- * @author <a href="mailto:schulte2005@users.sourceforge.net">Christian Schulte</a>
+ * @author <a href="mailto:cs@schulte.it">Christian Schulte</a>
  * @version $JOMC$
  *
  * @see #edit(java.lang.String)

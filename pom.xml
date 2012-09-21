@@ -75,8 +75,8 @@
   </dependencies>
   <distributionManagement>
     <site>
-      <id>jomc.sourceforge.net</id>
-      <name>JOMC Site</name>
+      <id>${jomc.artifacts.distribution.id}</id>
+      <name>${jomc.artifacts.distribution.name}</name>
       <url>${jomc.artifacts.distribution.url}/${project.artifactId}-${project.version}</url>
     </site>
   </distributionManagement>

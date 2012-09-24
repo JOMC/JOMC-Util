@@ -38,7 +38,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>jomc-util</artifactId>
-  <name>JOMC Utilities</name>
+  <name>JOMC :: Utilities</name>
   <description>Object management and configuration utilities.</description>
   <url>${jomc.artifacts.url}/${project.artifactId}-${project.version}</url>
   <build>

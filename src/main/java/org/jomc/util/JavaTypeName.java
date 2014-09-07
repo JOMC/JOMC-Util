@@ -51,15 +51,12 @@ import java.util.ResourceBundle;
  * This class supports parsing of Java type names as specified in the
  * Java Language Specification - Java SE 7 Edition - Chapters 3.8ff, 6.5 and 18.
  * </p>
- * <p>
- * <i>Please note that this class will move to package {@code org.jomc.util} in JOMC 2.0.</i>
- * </p>
  *
  * @author <a href="mailto:cs@schulte.it">Christian Schulte</a>
  * @version $JOMC$
  * @see #parse(java.lang.String)
  * @see #valueOf(java.lang.String)
- * @since 1.4
+ * @since 2.0
  */
 public final class JavaTypeName implements Serializable
 {
@@ -69,7 +66,7 @@ public final class JavaTypeName implements Serializable
      *
      * @author <a href="mailto:cs@schulte.it">Christian Schulte</a>
      * @version $JOMC$
-     * @since 1.4
+     * @since 2.0
      */
     public static final class Argument implements Serializable
     {

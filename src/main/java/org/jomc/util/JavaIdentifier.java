@@ -48,16 +48,13 @@ import java.util.ResourceBundle;
  * This class provides support for parsing and normalizing text to java identifiers as specified in the Java
  * Language Specification - Java SE 7 Edition - Chapter 3.8ff.
  * </p>
- * <p>
- * <i>Please note that this class will move to package {@code org.jomc.util} in JOMC 2.0.</i>
- * </p>
  *
  * @author <a href="mailto:cs@schulte.it">Christian Schulte</a>
  * @version $JOMC$
  * @see #normalize(java.lang.String, org.jomc.model.JavaIdentifier.NormalizationMode)
  * @see #parse(java.lang.String)
  * @see #valueOf(java.lang.String)
- * @since 1.4
+ * @since 2.0
  */
 public final class JavaIdentifier implements CharSequence, Serializable
 {
@@ -67,7 +64,7 @@ public final class JavaIdentifier implements CharSequence, Serializable
      *
      * @author <a href="mailto:cs@schulte.it">Christian Schulte</a>
      * @version $JOMC$
-     * @since 1.4
+     * @since 2.0
      * @see JavaIdentifier#normalize(java.lang.String, org.jomc.model.JavaIdentifier.NormalizationMode)
      */
     public static enum NormalizationMode

@@ -47,7 +47,7 @@ import static org.junit.Assert.fail;
  *
  * @author <a href="mailto:cs@schulte.it">Christian Schulte</a>
  * @version $JOMC$
- * @since 1.4
+ * @since 2.0
  */
 public class JavaTypeNameTest
 {

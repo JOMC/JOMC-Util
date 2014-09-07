@@ -51,6 +51,10 @@
     <testResources>
       <testResource>
         <filtering>false</filtering>
+        <directory>src/test/objects</directory>
+      </testResource>
+      <testResource>
+        <filtering>false</filtering>
         <directory>src/test/testfiles</directory>
       </testResource>
     </testResources>

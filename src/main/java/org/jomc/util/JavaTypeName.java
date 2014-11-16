@@ -845,7 +845,7 @@ public final class JavaTypeName implements Serializable
      *     ReferenceType  {[]}
      * </pre>
      *
-     * @see #parseReferenceType(org.jomc.model.JavaTypeName.Tokenizer, org.jomc.model.JavaTypeName, boolean, boolean)
+     * @see #parseReferenceType(org.jomc.util.JavaTypeName.Tokenizer, org.jomc.util.JavaTypeName, boolean, boolean)
      */
     private static void parseType( final JavaTypeName t, final String text, final boolean runtimeException )
         throws ParseException
@@ -983,7 +983,7 @@ public final class JavaTypeName implements Serializable
      *      Identifier [TypeArguments] { . Identifier [TypeArguments] }
      * </pre>
      *
-     * @see #parseTypeArguments(org.jomc.model.JavaTypeName.Tokenizer, org.jomc.model.JavaTypeName, boolean)
+     * @see #parseTypeArguments(org.jomc.util.JavaTypeName.Tokenizer, org.jomc.util.JavaTypeName, boolean)
      */
     private static void parseReferenceType( final Tokenizer tokenizer, final JavaTypeName t,
                                             final boolean in_type_arguments, final boolean runtimeException )
@@ -1129,7 +1129,7 @@ public final class JavaTypeName implements Serializable
      *      &lt; TypeArgument { , TypeArgument } &gt;
      * </pre>
      *
-     * @see #parseTypeArgument(org.jomc.model.JavaTypeName.Tokenizer, org.jomc.model.JavaTypeName, boolean)
+     * @see #parseTypeArgument(org.jomc.util.JavaTypeName.Tokenizer, org.jomc.util.JavaTypeName, boolean)
      */
     private static void parseTypeArguments( final Tokenizer tokenizer, final JavaTypeName t,
                                             final boolean runtimeException )

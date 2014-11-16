@@ -51,7 +51,7 @@ import java.util.ResourceBundle;
  *
  * @author <a href="mailto:cs@schulte.it">Christian Schulte</a>
  * @version $JOMC$
- * @see #normalize(java.lang.String, org.jomc.model.JavaIdentifier.NormalizationMode)
+ * @see #normalize(java.lang.String, org.jomc.util.JavaIdentifier.NormalizationMode)
  * @see #parse(java.lang.String)
  * @see #valueOf(java.lang.String)
  * @since 2.0
@@ -65,7 +65,7 @@ public final class JavaIdentifier implements CharSequence, Serializable
      * @author <a href="mailto:cs@schulte.it">Christian Schulte</a>
      * @version $JOMC$
      * @since 2.0
-     * @see JavaIdentifier#normalize(java.lang.String, org.jomc.model.JavaIdentifier.NormalizationMode)
+     * @see JavaIdentifier#normalize(java.lang.String, org.jomc.util.JavaIdentifier.NormalizationMode)
      */
     public static enum NormalizationMode
     {

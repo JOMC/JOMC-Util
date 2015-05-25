@@ -44,7 +44,9 @@ import static org.junit.Assert.assertTrue;
 public class VersionParserTest
 {
 
-    /** Creates a new {@code VersionParserTest} instance. */
+    /**
+     * Creates a new {@code VersionParserTest} instance.
+     */
     public VersionParserTest()
     {
         super();

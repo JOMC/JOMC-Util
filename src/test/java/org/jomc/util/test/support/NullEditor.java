@@ -43,7 +43,9 @@ import org.jomc.util.LineEditor;
 public final class NullEditor extends LineEditor
 {
 
-    /** Creates a new {@code NullEditor} instance. */
+    /**
+     * Creates a new {@code NullEditor} instance.
+     */
     public NullEditor()
     {
         this( null, null );
@@ -82,6 +84,7 @@ public final class NullEditor extends LineEditor
 
     /**
      * {@inheritDoc}
+     *
      * @return This method returns {@code null}.
      */
     @Override

@@ -45,19 +45,26 @@ import java.io.StringReader;
 public class LineEditor
 {
 
-    /** Editor to chain. */
+    /**
+     * Editor to chain.
+     */
     private LineEditor editor;
 
-    /** Line separator. */
+    /**
+     * Line separator.
+     */
     private String lineSeparator;
 
     /**
      * Current line number.
+     *
      * @since 1.2
      */
     private long lineNumber;
 
-    /** Creates a new {@code LineEditor} instance. */
+    /**
+     * Creates a new {@code LineEditor} instance.
+     */
     public LineEditor()
     {
         this( null, null );
@@ -126,8 +133,10 @@ public class LineEditor
 
     /**
      * Edits text.
-     * <p>This method splits the given string into lines and passes every line to method {@code editLine} in order of
-     * occurrence. On end of input, method {@code editLine} is called with a {@code null} argument.</p>
+     * <p>
+     * This method splits the given string into lines and passes every line to method {@code editLine} in order of
+     * occurrence. On end of input, method {@code editLine} is called with a {@code null} argument.
+     * </p>
      *
      * @param text The text to edit or {@code null}.
      *

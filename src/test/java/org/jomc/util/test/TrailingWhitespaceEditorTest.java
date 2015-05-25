@@ -44,27 +44,35 @@ import static org.junit.Assert.assertEquals;
 public class TrailingWhitespaceEditorTest extends LineEditorTest
 {
 
-    /** Creates a new {@code TrailingWhitespaceEditorTest} instance. */
+    /**
+     * Creates a new {@code TrailingWhitespaceEditorTest} instance.
+     */
     public TrailingWhitespaceEditorTest()
     {
         super();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TrailingWhitespaceEditor getLineEditor()
     {
         return (TrailingWhitespaceEditor) super.getLineEditor();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected TrailingWhitespaceEditor newLineEditor()
     {
         return new TrailingWhitespaceEditor();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected TrailingWhitespaceEditor newLineEditor( final LineEditor editor )
     {

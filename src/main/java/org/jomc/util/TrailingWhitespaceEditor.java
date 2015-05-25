@@ -41,7 +41,9 @@ package org.jomc.util;
 public final class TrailingWhitespaceEditor extends LineEditor
 {
 
-    /** Creates a new {@code TrailingWhitespaceEditor} instance. */
+    /**
+     * Creates a new {@code TrailingWhitespaceEditor} instance.
+     */
     public TrailingWhitespaceEditor()
     {
         this( null, null );
@@ -81,7 +83,9 @@ public final class TrailingWhitespaceEditor extends LineEditor
 
     /**
      * {@inheritDoc}
-     * <p>This method returns {@code line} with any trailing whitespace characters removed.</p>
+     * <p>
+     * This method returns {@code line} with any trailing whitespace characters removed.
+     * </p>
      *
      * @see Character#isWhitespace(char)
      */

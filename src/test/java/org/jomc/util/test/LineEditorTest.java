@@ -46,16 +46,24 @@ import static org.junit.Assert.assertNull;
 public class LineEditorTest
 {
 
-    /** Constant for the name of the system property holding the name of the encoding of resources backing the test. */
+    /**
+     * Constant for the name of the system property holding the name of the encoding of resources backing the test.
+     */
     private static final String RESOURCE_ENCODING_PROPERTY_NAME = "jomc.test.resourceEncoding";
 
-    /** The {@code LineEditor} instance tests are performed with. */
+    /**
+     * The {@code LineEditor} instance tests are performed with.
+     */
     private LineEditor lineEditor;
 
-    /** The name of the encoding to use when reading resources. */
+    /**
+     * The name of the encoding to use when reading resources.
+     */
     private String resourceEncoding;
 
-    /** Creates a new {@code LineEditorTest} instance. */
+    /**
+     * Creates a new {@code LineEditorTest} instance.
+     */
     public LineEditorTest()
     {
         super();

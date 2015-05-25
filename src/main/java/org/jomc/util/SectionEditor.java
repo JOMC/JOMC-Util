@@ -39,10 +39,12 @@ import java.util.Stack;
 
 /**
  * Interface to section based editing.
- * <p>Section based editing is a two phase process of parsing the editor's input into a corresponding hierarchy of
+ * <p>
+ * Section based editing is a two phase process of parsing the editor's input into a corresponding hierarchy of
  * {@code Section} instances, followed by rendering the parsed sections to produce the output of the editor. Method
  * {@code editLine} returns {@code null} during parsing and the output of the editor on end of input, rendered by
- * calling method {@code getOutput}. Parsing is backed by methods {@code getSection} and {@code isSectionFinished}.</p>
+ * calling method {@code getOutput}. Parsing is backed by methods {@code getSection} and {@code isSectionFinished}.
+ * </p>
  *
  * @author <a href="mailto:cs@schulte.it">Christian Schulte</a>
  * @version $JOMC$
@@ -52,19 +54,29 @@ import java.util.Stack;
 public class SectionEditor extends LineEditor
 {
 
-    /** Marker indicating the start of a section. */
+    /**
+     * Marker indicating the start of a section.
+     */
     private static final String DEFAULT_SECTION_START = "SECTION-START[";
 
-    /** Marker indicating the end of a section. */
+    /**
+     * Marker indicating the end of a section.
+     */
     private static final String DEFAULT_SECTION_END = "SECTION-END";
 
-    /** Stack of sections. */
+    /**
+     * Stack of sections.
+     */
     private Stack<Section> stack;
 
-    /** Mapping of section names to flags indicating presence of the section. */
+    /**
+     * Mapping of section names to flags indicating presence of the section.
+     */
     private final Map<String, Boolean> presenceFlags = new HashMap<String, Boolean>();
 
-    /** Creates a new {@code SectionEditor} instance. */
+    /**
+     * Creates a new {@code SectionEditor} instance.
+     */
     public SectionEditor()
     {
         this( null, null );
@@ -242,8 +254,10 @@ public class SectionEditor extends LineEditor
 
     /**
      * Edits a section.
-     * <p>This method does not change any content by default. Overriding classes may use this method for editing
-     * sections prior to rendering.</p>
+     * <p>
+     * This method does not change any content by default. Overriding classes may use this method for editing
+     * sections prior to rendering.
+     * </p>
      *
      * @param section The section to edit.
      *
@@ -287,8 +301,10 @@ public class SectionEditor extends LineEditor
 
     /**
      * Gets the output of the editor.
-     * <p>This method calls method {@code editSection()} for each section of the editor prior to rendering the sections
-     * to produce the output of the editor.</p>
+     * <p>
+     * This method calls method {@code editSection()} for each section of the editor prior to rendering the sections
+     * to produce the output of the editor.
+     * </p>
      *
      * @param section The section to start rendering the editor's output with.
      *
@@ -320,7 +336,7 @@ public class SectionEditor extends LineEditor
     public boolean isSectionPresent( final String sectionName )
     {
         return sectionName != null && this.presenceFlags.get( sectionName ) != null
-               && this.presenceFlags.get( sectionName ).booleanValue();
+                   && this.presenceFlags.get( sectionName ).booleanValue();
 
     }
 

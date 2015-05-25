@@ -42,34 +42,54 @@ import java.util.List;
 public class Section
 {
 
-    /** Constant for the mode during parsing the head content of a section. */
+    /**
+     * Constant for the mode during parsing the head content of a section.
+     */
     static final int MODE_HEAD = 1;
 
-    /** Constant for the mode during parsing the tail content of a section. */
+    /**
+     * Constant for the mode during parsing the tail content of a section.
+     */
     static final int MODE_TAIL = 2;
 
-    /** The current parsing mode. */
+    /**
+     * The current parsing mode.
+     */
     private int mode = MODE_HEAD;
 
-    /** The name of this section. */
+    /**
+     * The name of this section.
+     */
     private String name;
 
-    /** The parsed head content of this section. */
+    /**
+     * The parsed head content of this section.
+     */
     private StringBuilder headContent;
 
-    /** The parsed tail content of this section. */
+    /**
+     * The parsed tail content of this section.
+     */
     private StringBuilder tailContent;
 
-    /** Line marking the start of this section. */
+    /**
+     * Line marking the start of this section.
+     */
     private String startingLine;
 
-    /** Line marking the end of this section. */
+    /**
+     * Line marking the end of this section.
+     */
     private String endingLine;
 
-    /** The child sections of this section. */
+    /**
+     * The child sections of this section.
+     */
     private List<Section> sections;
 
-    /** Creates a new {@code Section} instance. */
+    /**
+     * Creates a new {@code Section} instance.
+     */
     public Section()
     {
         super();
@@ -167,9 +187,11 @@ public class Section
 
     /**
      * Gets the child sections of this section.
-     * <p>This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make
+     * <p>
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make
      * to the returned list will be present inside the object. This is why there is no {@code set} method for the
-     * sections property.</p>
+     * sections property.
+     * </p>
      *
      * @return A list of child sections of this section.
      */
@@ -209,7 +231,7 @@ public class Section
             return current;
         }
 
-        for ( Section child : current.getSections() )
+        for ( final Section child : current.getSections() )
         {
             if ( sectionName.equals( child.getName() ) )
             {

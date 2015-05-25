@@ -54,23 +54,31 @@ import static org.junit.Assert.fail;
 public class SectionEditorTest extends LineEditorTest
 {
 
-    /** Constant to prefix relative resource names with. */
+    /**
+     * Constant to prefix relative resource names with.
+     */
     private static final String ABSOLUTE_RESOURCE_NAME_PREFIX = "/org/jomc/util/test/";
 
-    /** Creates a new {@code SectionEditorTest} instance. */
+    /**
+     * Creates a new {@code SectionEditorTest} instance.
+     */
     public SectionEditorTest()
     {
         super();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public SectionEditor getLineEditor()
     {
         return (SectionEditor) super.getLineEditor();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected SectionEditor newLineEditor()
     {
@@ -96,7 +104,9 @@ public class SectionEditorTest extends LineEditorTest
         };
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected SectionEditor newLineEditor( final LineEditor editor )
     {

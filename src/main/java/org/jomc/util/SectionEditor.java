@@ -31,11 +31,20 @@
 package org.jomc.util;
 
 import java.io.IOException;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.text.MessageFormat;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Stack;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 /**
  * Interface to section based editing.
@@ -72,7 +81,14 @@ public class SectionEditor extends LineEditor
     /**
      * Mapping of section names to flags indicating presence of the section.
      */
-    private final Map<String, Boolean> presenceFlags = new HashMap<String, Boolean>();
+    private final Map<String, Boolean> presenceFlags = new ConcurrentHashMap<String, Boolean>( 32 );
+
+    /**
+     * The {@code ExecutorService} of the instance.
+     *
+     * @since 1.10
+     */
+    private ExecutorService executorService;
 
     /**
      * Creates a new {@code SectionEditor} instance.
@@ -111,6 +127,41 @@ public class SectionEditor extends LineEditor
     public SectionEditor( final LineEditor editor, final String lineSeparator )
     {
         super( editor, lineSeparator );
+    }
+
+    /**
+     * Gets an {@code ExecutorService} used to edit sections in parallel.
+     *
+     * @return An {@code ExecutorService} used to edit sections in parallel or {@code null}, if no such service has
+     * been provided by an application.
+     *
+     * @since 1.10
+     *
+     * @see #setExecutorService(java.util.concurrent.ExecutorService)
+     */
+    public final ExecutorService getExecutorService()
+    {
+        return this.executorService;
+    }
+
+    /**
+     * Sets the {@code ExecutorService} to be used to edit sections in parallel.
+     * <p>
+     * The {@code ExecutorService} to be used to edit sections in parallel is an optional entity. If no such service is
+     * provided by an application, no parallelization is performed. Configuration or lifecycle management of the given
+     * {@code ExecutorService} is the responsibility of the application.
+     * </p>
+     *
+     * @param value The {@code ExecutorService} to be used to edit sections in parallel or {@code null}, to disable any
+     * parallelization.
+     *
+     * @since 1.10
+     *
+     * @see #getExecutorService()
+     */
+    public final void setExecutorService( final ExecutorService value )
+    {
+        this.executorService = value;
     }
 
     @Override
@@ -249,7 +300,7 @@ public class SectionEditor extends LineEditor
      */
     protected boolean isSectionFinished( final String line ) throws IOException
     {
-        return line != null && line.indexOf( DEFAULT_SECTION_END ) != -1;
+        return line != null && line.contains( DEFAULT_SECTION_END );
     }
 
     /**
@@ -278,24 +329,29 @@ public class SectionEditor extends LineEditor
     }
 
     /**
-     * Edits a section recursively.
+     * Creates tasks recursively for editing sections in parallel.
      *
      * @param section The section to edit recursively.
+     * @param tasks The collection of tasks to run in parallel.
      *
-     * @throws NullPointerException if {@code section} is {@code null}.
+     * @throws NullPointerException if {@code section} or {@code tasks} is {@code null}.
      * @throws IOException if editing fails.
      */
-    private void editSections( final Section section ) throws IOException
+    private void editSections( final Section section, final Collection<EditSectionTask> tasks ) throws IOException
     {
         if ( section == null )
         {
             throw new NullPointerException( "section" );
         }
+        if ( tasks == null )
+        {
+            throw new NullPointerException( "tasks" );
+        }
 
-        this.editSection( section );
+        tasks.add( new EditSectionTask( section ) );
         for ( int i = 0, s0 = section.getSections().size(); i < s0; i++ )
         {
-            this.editSections( section.getSections().get( i ) );
+            this.editSections( section.getSections().get( i ), tasks );
         }
     }
 
@@ -320,9 +376,79 @@ public class SectionEditor extends LineEditor
             throw new NullPointerException( "section" );
         }
 
-        this.presenceFlags.clear();
-        this.editSections( section );
-        return this.renderSections( section, new StringBuilder( 512 ) ).toString();
+        try
+        {
+            this.presenceFlags.clear();
+            final List<EditSectionTask> tasks = new LinkedList<EditSectionTask>();
+            this.editSections( section, tasks );
+
+            if ( this.getExecutorService() != null && tasks.size() > 1 )
+            {
+                for ( final Future<Void> task : this.getExecutorService().invokeAll( tasks ) )
+                {
+                    task.get();
+                }
+            }
+            else
+            {
+                for ( int i = 0, s0 = tasks.size(); i < s0; i++ )
+                {
+                    tasks.get( i ).call();
+                }
+            }
+
+            return this.renderSections( section, new StringBuilder( 512 ) ).toString();
+        }
+        catch ( final CancellationException e )
+        {
+            throw (IOException) new IOException( getMessage( e ) ).initCause( e );
+        }
+        catch ( final InterruptedException e )
+        {
+            throw (IOException) new IOException( getMessage( e ) ).initCause( e );
+        }
+        catch ( final ExecutionException e )
+        {
+            if ( e.getCause() instanceof IOException )
+            {
+                throw (IOException) e.getCause();
+            }
+            else if ( e.getCause() instanceof RuntimeException )
+            {
+                // The fork-join framework breaks the exception handling contract of Callable by re-throwing any
+                // exception caught using a runtime exception.
+                if ( e.getCause().getCause() instanceof IOException )
+                {
+                    throw (IOException) e.getCause().getCause();
+                }
+                else if ( e.getCause().getCause() instanceof RuntimeException )
+                {
+                    throw (RuntimeException) e.getCause().getCause();
+                }
+                else if ( e.getCause().getCause() instanceof Error )
+                {
+                    throw (Error) e.getCause().getCause();
+                }
+                else if ( e.getCause().getCause() instanceof Exception )
+                {
+                    // Checked exception not declared to be thrown by the Callable's 'call' method.
+                    throw new UndeclaredThrowableException( e.getCause().getCause() );
+                }
+                else
+                {
+                    throw (RuntimeException) e.getCause();
+                }
+            }
+            else if ( e.getCause() instanceof Error )
+            {
+                throw (Error) e.getCause();
+            }
+            else
+            {
+                // Checked exception not declared to be thrown by the Callable's 'call' method.
+                throw new UndeclaredThrowableException( e.getCause() );
+            }
+        }
     }
 
     /**
@@ -336,7 +462,7 @@ public class SectionEditor extends LineEditor
     public boolean isSectionPresent( final String sectionName )
     {
         return sectionName != null && this.presenceFlags.get( sectionName ) != null
-                   && this.presenceFlags.get( sectionName ).booleanValue();
+                   && this.presenceFlags.get( sectionName );
 
     }
 
@@ -372,10 +498,39 @@ public class SectionEditor extends LineEditor
         return buffer;
     }
 
+    private final class EditSectionTask implements Callable<Void>
+    {
+
+        private final Section section;
+
+        EditSectionTask( final Section section )
+        {
+            super();
+            this.section = section;
+        }
+
+        public Void call() throws IOException
+        {
+            editSection( this.section );
+            return null;
+        }
+
+    }
+
     private static String getMessage( final String key, final Object... arguments )
     {
-        return MessageFormat.format( ResourceBundle.getBundle( SectionEditor.class.getName().
-            replace( '.', '/' ) ).getString( key ), arguments );
+        return MessageFormat.format( ResourceBundle.getBundle( SectionEditor.class.getName() ).getString( key ),
+                                     arguments );
+
+    }
+
+    private static String getMessage( final Throwable t )
+    {
+        return t != null
+                   ? t.getMessage() != null && t.getMessage().trim().length() > 0
+                         ? t.getMessage()
+                         : getMessage( t.getCause() )
+                   : null;
 
     }
 

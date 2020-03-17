@@ -144,7 +144,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
     /**
      * Queue, to which weak keys are appended to.
      */
-    private final ReferenceQueue<K> referenceQueue = new ReferenceQueue<K>();
+    private final ReferenceQueue<K> referenceQueue = new ReferenceQueue<>();
 
     /**
      * The key set view of the map.
@@ -174,7 +174,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
     /**
      * Null value returned by method {@link #getEntry(Object)}.
      */
-    private final WeakEntry<K, V> NULL_ENTRY = new WeakEntry<K, V>( null, null, 0, this.referenceQueue );
+    private final WeakEntry<K, V> NULL_ENTRY = new WeakEntry<>( null, null, 0, this.referenceQueue );
 
     /**
      * Constructs a new, empty {@code WeakIdentityHashMap} with the default initial capacity ({@code 16}) and load
@@ -247,6 +247,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
      *
      * @return The number of key-value mappings in this map.
      */
+    @Override
     public int size()
     {
         if ( this.size > 0 )
@@ -263,6 +264,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
      * @return {@code true}, if this map contains no key-value mappings; {@code false}, if this map contains at least
      * one mapping.
      */
+    @Override
     public boolean isEmpty()
     {
         return this.size() == 0;
@@ -282,6 +284,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
      *
      * @throws NullPointerException if {@code key} is {@code null}.
      */
+    @Override
     public boolean containsKey( final Object key )
     {
         if ( key == null )
@@ -306,6 +309,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
      *
      * @throws NullPointerException if {@code value} is {@code null}.
      */
+    @Override
     public boolean containsValue( final Object value )
     {
         if ( value == null )
@@ -344,6 +348,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
      *
      * @throws NullPointerException if {@code key} is {@code null}.
      */
+    @Override
     public V get( final Object key )
     {
         if ( key == null )
@@ -368,6 +373,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
      *
      * @throws NullPointerException if {@code key} or {@code value} is {@code null}.
      */
+    @Override
     public V put( final K key, final V value )
     {
         if ( key == null )
@@ -393,7 +399,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
             }
         }
 
-        final WeakEntry<K, V> entry = new WeakEntry<K, V>( key, value, hashCode, this.referenceQueue );
+        final WeakEntry<K, V> entry = new WeakEntry<>( key, value, hashCode, this.referenceQueue );
         entry.next = table[index];
         table[index] = entry;
 
@@ -417,6 +423,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
      *
      * @throws NullPointerException if {@code key} is {@code null}.
      */
+    @Override
     public V remove( final Object key )
     {
         if ( key == null )
@@ -467,6 +474,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
      * @throws NullPointerException if {@code map} is {@code null}, or if {@code map} contains {@code null} keys or
      * values.
      */
+    @Override
     public void putAll( final Map<? extends K, ? extends V> m )
     {
         if ( m == null )
@@ -486,6 +494,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
      * Removes all of the mappings from this map so that the map will be empty after this call returns.
      */
     @SuppressWarnings( "empty-statement" )
+    @Override
     public void clear()
     {
         this.purge();
@@ -509,6 +518,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
      *
      * @return A set view of the keys contained in this map.
      */
+    @Override
     public Set<K> keySet()
     {
         if ( this.keySet == null )
@@ -516,11 +526,13 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
             this.keySet = new AbstractSet<K>()
             {
 
+                @Override
                 public Iterator<K> iterator()
                 {
                     return new KeyIterator();
                 }
 
+                @Override
                 public int size()
                 {
                     return WeakIdentityHashMap.this.size();
@@ -546,6 +558,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
      *
      * @return A collection view of the values contained in this map.
      */
+    @Override
     public Collection<V> values()
     {
         if ( this.valueCollection == null )
@@ -553,11 +566,13 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
             this.valueCollection = new AbstractCollection<V>()
             {
 
+                @Override
                 public Iterator<V> iterator()
                 {
                     return new ValueIterator();
                 }
 
+                @Override
                 public int size()
                 {
                     return WeakIdentityHashMap.this.size();
@@ -583,6 +598,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
      *
      * @return A set view of the mappings contained in this map.
      */
+    @Override
     public Set<Map.Entry<K, V>> entrySet()
     {
         if ( this.entrySet == null )
@@ -590,11 +606,13 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
             this.entrySet = new AbstractSet<Map.Entry<K, V>>()
             {
 
+                @Override
                 public Iterator<Map.Entry<K, V>> iterator()
                 {
                     return new EntryIterator();
                 }
 
+                @Override
                 public int size()
                 {
                     return WeakIdentityHashMap.this.size();
@@ -656,19 +674,6 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
     public int hashCode()
     {
         return this.entrySet().hashCode();
-    }
-
-    /**
-     * Finalizes the object by polling the internal reference queue for any pending references.
-     *
-     * @since 1.2
-     */
-    @Override
-    protected void finalize() throws Throwable
-    {
-        this.modifications++;
-        while ( this.referenceQueue.poll() != null );
-        super.finalize();
     }
 
     /**
@@ -891,6 +896,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
          * @throws IllegalStateException if the entry got removed from the backing map (either due to an iterator's
          * {@code remove} operation or due to the key having been garbage collected).
          */
+        @Override
         public K getKey()
         {
             final K key = this.get();
@@ -911,6 +917,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
          * @throws IllegalStateException if the entry got removed from the backing map (either due to an iterator's
          * {@code remove} operation or due to the key having been garbage collected).
          */
+        @Override
         public V getValue()
         {
             if ( this.get() == null || this.removed )
@@ -932,6 +939,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
          * @throws IllegalStateException if the entry got removed from the backing map (either due to an iterator's
          * {@code remove} operation or due to the key having been garbage collected).
          */
+        @Override
         public V setValue( final V value )
         {
             if ( value == null )
@@ -1177,6 +1185,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
          *
          * @throws NoSuchElementException if the iterator does not have more elements.
          */
+        @Override
         public Map.Entry<K, V> next()
         {
             return super.nextElement();
@@ -1205,6 +1214,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
          *
          * @throws NoSuchElementException if the iterator does not have more elements.
          */
+        @Override
         public K next()
         {
             return super.nextElement().getKey();
@@ -1233,6 +1243,7 @@ public final class WeakIdentityHashMap<K, V> implements Map<K, V>
          *
          * @throws NoSuchElementException if the iterator does not have more elements.
          */
+        @Override
         public V next()
         {
             return super.nextElement().getValue();

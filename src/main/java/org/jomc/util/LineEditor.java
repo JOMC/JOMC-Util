@@ -162,7 +162,7 @@ public class LineEditor
                 {
                     reader = new BufferedReader( new StringReader( edited ) );
 
-                    String line = null;
+                    String line;
                     while ( ( line = reader.readLine() ) != null )
                     {
                         this.lineNumber++;

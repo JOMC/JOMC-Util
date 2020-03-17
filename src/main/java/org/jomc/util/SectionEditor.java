@@ -81,7 +81,7 @@ public class SectionEditor extends LineEditor
     /**
      * Mapping of section names to flags indicating presence of the section.
      */
-    private final Map<String, Boolean> presenceFlags = new ConcurrentHashMap<String, Boolean>( 32 );
+    private final Map<String, Boolean> presenceFlags = new ConcurrentHashMap<>( 32 );
 
     /**
      * The {@code ExecutorService} of the instance.
@@ -171,7 +171,7 @@ public class SectionEditor extends LineEditor
         {
             final Section root = new Section();
             root.setMode( Section.MODE_HEAD );
-            this.stack = new Stack<Section>();
+            this.stack = new Stack<>();
             this.stack.push( root );
         }
 
@@ -379,7 +379,7 @@ public class SectionEditor extends LineEditor
         try
         {
             this.presenceFlags.clear();
-            final List<EditSectionTask> tasks = new LinkedList<EditSectionTask>();
+            final List<EditSectionTask> tasks = new LinkedList<>();
             this.editSections( section, tasks );
 
             if ( this.getExecutorService() != null && tasks.size() > 1 )
@@ -399,13 +399,9 @@ public class SectionEditor extends LineEditor
 
             return this.renderSections( section, new StringBuilder( 512 ) ).toString();
         }
-        catch ( final CancellationException e )
+        catch ( final CancellationException | InterruptedException e )
         {
-            throw (IOException) new IOException( getMessage( e ) ).initCause( e );
-        }
-        catch ( final InterruptedException e )
-        {
-            throw (IOException) new IOException( getMessage( e ) ).initCause( e );
+            throw new IOException( getMessage( e ), e );
         }
         catch ( final ExecutionException e )
         {
@@ -509,6 +505,7 @@ public class SectionEditor extends LineEditor
             this.section = section;
         }
 
+        @Override
         public Void call() throws IOException
         {
             editSection( this.section );

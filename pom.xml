@@ -34,18 +34,18 @@
   <parent>
     <groupId>org.jomc</groupId>
     <artifactId>jomc-pom</artifactId>
-    <version>1.5</version>
+    <version>1.7.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>jomc-util</artifactId>
-  <version>1.10</version>
+  <version>1.11.0-SNAPSHOT</version>
   <name>JOMC ⁑ Utilities</name>
   <description>Object management and configuration utilities.</description>
   <url>${jomc.base.url}/${jomc.site.location}</url>
   <scm>
-    <connection>${jomc.scm.connection}/tags/jomc-util-1.10</connection>
-    <developerConnection>${jomc.scm.developerConnection}/tags/jomc-util-1.10</developerConnection>
-    <url>${jomc.scm.url}/tags/jomc-util-1.10</url>
+    <connection>${jomc.scm.connection}/branches/jomc-util-1.x</connection>
+    <developerConnection>${jomc.scm.developerConnection}/branches/jomc-util-1.x</developerConnection>
+    <url>${jomc.scm.url}/branches/jomc-util-1.x</url>
   </scm>
   <build>
     <resources>
@@ -57,7 +57,7 @@
     <testResources>
       <testResource>
         <filtering>false</filtering>
-        <directory>src/test/testfiles</directory>
+        <directory>src/test/resources</directory>
       </testResource>
     </testResources>
     <plugins>
@@ -88,4 +88,7 @@
       <url>${jomc.site.distribution.base.url}/${jomc.site.location}</url>
     </site>
   </distributionManagement>
+  <properties>
+    <jomc.module.name>org.jomc.util</jomc.module.name>
+  </properties>
 </project>

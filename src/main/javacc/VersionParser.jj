@@ -32,6 +32,7 @@ options {
   STATIC = false;
   IGNORE_CASE = true;
   FORCE_LA_CHECK = true;
+  JDK_VERSION = "1.4";
 }
 
 PARSER_BEGIN(VersionParser)

@@ -199,7 +199,7 @@ public class Section
     {
         if ( this.sections == null )
         {
-            this.sections = new ArrayList<Section>();
+            this.sections = new ArrayList<>();
         }
 
         return this.sections;

@@ -34,12 +34,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.util.concurrent.ExecutorService;
 import org.apache.commons.io.IOUtils;
 import org.jomc.util.LineEditor;
 import org.jomc.util.Section;
 import org.jomc.util.SectionEditor;
-import org.junit.After;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -60,11 +58,6 @@ public class SectionEditorTest extends LineEditorTest
      * Constant to prefix relative resource names with.
      */
     private static final String ABSOLUTE_RESOURCE_NAME_PREFIX = "/org/jomc/util/test/";
-
-    /**
-     * The {@code ExecutorService} backing the tests.
-     */
-    private ExecutorService executorService;
 
     /**
      * Creates a new {@code SectionEditorTest} instance.
@@ -110,7 +103,6 @@ public class SectionEditorTest extends LineEditorTest
 
         };
 
-        sectionEditor.setExecutorService( this.getExecutorService() );
         return sectionEditor;
     }
 
@@ -121,52 +113,7 @@ public class SectionEditorTest extends LineEditorTest
     protected SectionEditor newLineEditor( final LineEditor editor )
     {
         final SectionEditor sectionEditor = new SectionEditor( editor );
-        sectionEditor.setExecutorService( this.getExecutorService() );
         return sectionEditor;
-    }
-
-    /**
-     * Gets the {@code ExecutorService} backing the tests.
-     *
-     * @return The {@code ExecutorService} backing the tests.
-     *
-     * @see #newExecutorService()
-     * @since 1.10
-     */
-    public final ExecutorService getExecutorService()
-    {
-        if ( this.executorService == null )
-        {
-            this.executorService = this.newExecutorService();
-        }
-
-        return this.executorService;
-    }
-
-    /**
-     * Creates a new {@code ExecutorService} backing the tests.
-     *
-     * @return A new {@code ExecutorService} backing the tests, or {@code null}.
-     *
-     * @see #getExecutorService()
-     * @since 1.10
-     */
-    protected ExecutorService newExecutorService()
-    {
-        return null;
-    }
-
-    /**
-     * Shuts down the {@code ExecutorService} backing the tests, if not {@code null}.
-     */
-    @After
-    public final void shutdown()
-    {
-        if ( this.executorService != null )
-        {
-            this.executorService.shutdown();
-            this.executorService = null;
-        }
     }
 
     @Test

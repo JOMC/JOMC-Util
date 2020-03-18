@@ -33,9 +33,12 @@ package org.jomc.util;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 /**
  * Interface to section based editing.
@@ -282,37 +285,30 @@ public class SectionEditor extends LineEditor
      */
     private void editSections( final Section section ) throws IOException
     {
-        final class IoException extends RuntimeException
+        this.editSection( Objects.requireNonNull( section, "section" ) );
+
+        try ( final Stream<Section> stream = section.getSections().parallelStream() )
         {
-
-            private static final long serialVersionUID = 1L;
-
-            IoException( final IOException e )
+            final Optional<IOException> exception = stream.map( ( s )  ->
             {
-                super( e );
-            }
+                IOException ex = null;
 
-        }
-
-        try
-        {
-            this.editSection( Objects.requireNonNull( section, "section" ) );
-
-            section.getSections().parallelStream().forEach( ( child )  ->
-            {
                 try
                 {
-                    editSections( child );
+                    editSections( s );
                 }
                 catch ( final IOException e )
                 {
-                    throw new IoException( e );
+                    ex = e;
                 }
-            } );
-        }
-        catch ( final IoException e )
-        {
-            throw new IOException( getMessage( e.getCause() ), e.getCause() );
+
+                return ex;
+            } ).filter( ( ex )  -> ex != null ).findFirst();
+
+            if ( exception.isPresent() )
+            {
+                throw new IOException( getMessage( exception.get() ), exception.get() );
+            }
         }
     }
 

@@ -266,9 +266,7 @@ public class SectionEditor extends LineEditor
      */
     protected void editSection( final Section section ) throws IOException
     {
-        Objects.requireNonNull( section, "section" );
-
-        if ( section.getName() != null )
+        if ( Objects.requireNonNull( section, "section" ).getName() != null )
         {
             this.presenceFlags.put( section.getName(), Boolean.TRUE );
         }
@@ -284,8 +282,6 @@ public class SectionEditor extends LineEditor
      */
     private void editSections( final Section section ) throws IOException
     {
-        Objects.requireNonNull( section, "section" );
-
         final class IoException extends RuntimeException
         {
 
@@ -300,7 +296,7 @@ public class SectionEditor extends LineEditor
 
         try
         {
-            this.editSection( section );
+            this.editSection( Objects.requireNonNull( section, "section" ) );
 
             section.getSections().parallelStream().forEach( ( child )  ->
             {

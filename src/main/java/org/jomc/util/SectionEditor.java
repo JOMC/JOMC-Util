@@ -266,10 +266,7 @@ public class SectionEditor extends LineEditor
      */
     protected void editSection( final Section section ) throws IOException
     {
-        if ( section == null )
-        {
-            throw new NullPointerException( "section" );
-        }
+        Objects.requireNonNull( section, "section" );
 
         if ( section.getName() != null )
         {
@@ -287,10 +284,7 @@ public class SectionEditor extends LineEditor
      */
     private void editSections( final Section section ) throws IOException
     {
-        if ( section == null )
-        {
-            throw new NullPointerException( "section" );
-        }
+        Objects.requireNonNull( section, "section" );
 
         final class IoException extends RuntimeException
         {
@@ -342,11 +336,7 @@ public class SectionEditor extends LineEditor
      */
     protected String getOutput( final Section section ) throws IOException
     {
-        if ( section == null )
-        {
-            throw new NullPointerException( "section" );
-        }
-
+        Objects.requireNonNull( section, "section" );
         this.presenceFlags.clear();
         this.editSections( section );
         return this.renderSections( section, new StringBuilder( 512 ) ).toString();

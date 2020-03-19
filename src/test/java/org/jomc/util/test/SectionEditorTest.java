@@ -230,8 +230,8 @@ public class SectionEditorTest extends LineEditorTest
         this.assertUnmatchedSections( ABSOLUTE_RESOURCE_NAME_PREFIX + "MissingSectionStartTest.txt" );
         this.assertUnmatchedSections( ABSOLUTE_RESOURCE_NAME_PREFIX + "MissingSectionsStartTest.txt" );
 
-        final StringBuilder testNoSections = new StringBuilder();
-        final StringBuilder expectedNoSections = new StringBuilder();
+        final StringBuilder testNoSections = new StringBuilder( 14000 );
+        final StringBuilder expectedNoSections = new StringBuilder( 14000 );
 
         for ( int i = 1000; i >= 0; i-- )
         {

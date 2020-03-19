@@ -148,20 +148,16 @@ public class LineEditor
     {
         String edited = text;
         this.lineNumber = 0L;
-        BufferedReader reader = null;
-        boolean suppressExceptionOnClose = true;
 
-        try
+        if ( edited != null )
         {
-            if ( edited != null )
+            final StringBuilder buf = new StringBuilder( edited.length() + 16 );
+            boolean appended = false;
+
+            if ( edited.length() > 0 )
             {
-                final StringBuilder buf = new StringBuilder( edited.length() + 16 );
-                boolean appended = false;
-
-                if ( edited.length() > 0 )
+                try ( final BufferedReader reader = new BufferedReader( new StringReader( edited ) ) )
                 {
-                    reader = new BufferedReader( new StringReader( edited ) );
-
                     String line;
                     while ( ( line = reader.readLine() ) != null )
                     {
@@ -174,52 +170,34 @@ public class LineEditor
                         }
                     }
                 }
-                else
-                {
-                    this.lineNumber++;
-                    final String replacement = this.editLine( edited );
-                    if ( replacement != null )
-                    {
-                        buf.append( replacement ).append( this.getLineSeparator() );
-                        appended = true;
-                    }
-                }
-
-                final String replacement = this.editLine( null );
+            }
+            else
+            {
+                this.lineNumber++;
+                final String replacement = this.editLine( edited );
                 if ( replacement != null )
                 {
-                    buf.append( replacement );
+                    buf.append( replacement ).append( this.getLineSeparator() );
                     appended = true;
                 }
-
-                edited = appended ? buf.toString() : null;
             }
 
-            if ( this.editor != null )
+            final String replacement = this.editLine( null );
+            if ( replacement != null )
             {
-                edited = this.editor.edit( edited );
+                buf.append( replacement );
+                appended = true;
             }
 
-            suppressExceptionOnClose = false;
-            return edited;
+            edited = appended ? buf.toString() : null;
         }
-        finally
+
+        if ( this.editor != null )
         {
-            try
-            {
-                if ( reader != null )
-                {
-                    reader.close();
-                }
-            }
-            catch ( final IOException e )
-            {
-                if ( !suppressExceptionOnClose )
-                {
-                    throw e;
-                }
-            }
+            edited = this.editor.edit( edited );
         }
+
+        return edited;
     }
 
     /**

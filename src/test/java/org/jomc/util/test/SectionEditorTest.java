@@ -34,6 +34,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.util.stream.IntStream;
 import org.apache.commons.io.IOUtils;
 import org.jomc.util.LineEditor;
 import org.jomc.util.Section;
@@ -177,13 +178,16 @@ public class SectionEditorTest extends LineEditorTest
         this.assertUnmatchedSections( ABSOLUTE_RESOURCE_NAME_PREFIX + "MissingSectionStartTest.txt" );
         this.assertUnmatchedSections( ABSOLUTE_RESOURCE_NAME_PREFIX + "MissingSectionsStartTest.txt" );
 
-        final StringBuilder testNoSections = new StringBuilder();
-        final StringBuilder expectedNoSections = new StringBuilder();
+        final StringBuilder testNoSections = new StringBuilder( 14000 );
+        final StringBuilder expectedNoSections = new StringBuilder( 14000 );
 
-        for ( int i = 1000; i >= 0; i-- )
+        try ( final IntStream stream = IntStream.range( 0, 1000 ).parallel().unordered() )
         {
-            testNoSections.append( "Hello editor.\n" );
-            expectedNoSections.append( "Hello editor." ).append( this.getLineEditor().getLineSeparator() );
+            stream.forEach( i  ->
+            {
+                testNoSections.append( "Hello editor.\n" );
+                expectedNoSections.append( "Hello editor." ).append( this.getLineEditor().getLineSeparator() );
+            } );
         }
 
         assertEquals( expectedNoSections.toString(), this.getLineEditor().edit( testNoSections.toString() ) );
@@ -215,13 +219,9 @@ public class SectionEditorTest extends LineEditorTest
 
     private static String convertLineSeparator( final String s ) throws IOException
     {
-        BufferedReader reader = null;
-        boolean suppressExceptionOnClose = true;
-
-        try
+        try ( final BufferedReader reader = new BufferedReader( new StringReader( s ) ) )
         {
-            final StringBuilder b = new StringBuilder();
-            reader = new BufferedReader( new StringReader( s ) );
+            final StringBuilder b = new StringBuilder( s.length() );
 
             String line;
             while ( ( line = reader.readLine() ) != null )
@@ -229,59 +229,20 @@ public class SectionEditorTest extends LineEditorTest
                 b.append( line ).append( System.getProperty( "line.separator", "\n" ) );
             }
 
-            suppressExceptionOnClose = false;
             return b.toString();
-        }
-        finally
-        {
-            try
-            {
-                if ( reader != null )
-                {
-                    reader.close();
-                }
-            }
-            catch ( final IOException e )
-            {
-                if ( !suppressExceptionOnClose )
-                {
-                    throw e;
-                }
-            }
         }
     }
 
     private String getResource( final String resourceName ) throws IOException
     {
 
-        InputStream in = null;
-        boolean suppressExceptionOnClose = true;
         assertTrue( resourceName.startsWith( "/" ) );
 
-        try
+        try ( final InputStream in = this.getClass().getResourceAsStream( resourceName ) )
         {
-            in = this.getClass().getResourceAsStream( resourceName );
             assertNotNull( "Resource '" + resourceName + "' not found.", in );
             final String content = IOUtils.toString( in, this.getResourceEncoding() );
-            suppressExceptionOnClose = false;
             return content;
-        }
-        finally
-        {
-            try
-            {
-                if ( in != null )
-                {
-                    in.close();
-                }
-            }
-            catch ( final IOException e )
-            {
-                if ( !suppressExceptionOnClose )
-                {
-                    throw e;
-                }
-            }
         }
     }
 

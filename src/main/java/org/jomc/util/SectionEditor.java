@@ -32,12 +32,13 @@ package org.jomc.util;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -289,9 +290,16 @@ public class SectionEditor extends LineEditor
 
         try ( final Stream<Section> stream = section.getSections().parallelStream() )
         {
-            final Optional<IOException> exception = stream.map( ( s )  ->
+            final class EditSectionsResult
             {
-                IOException ex = null;
+
+                IOException ioException;
+
+            }
+
+            final Map<Boolean, List<EditSectionsResult>> results = stream.map( s  ->
+            {
+                final EditSectionsResult r = new EditSectionsResult();
 
                 try
                 {
@@ -299,15 +307,17 @@ public class SectionEditor extends LineEditor
                 }
                 catch ( final IOException e )
                 {
-                    ex = e;
+                    r.ioException = e;
                 }
 
-                return ex;
-            } ).filter( ( ex )  -> ex != null ).findFirst();
+                return r;
+            } ).collect( Collectors.groupingBy( r  -> r.ioException == null ) );
 
-            if ( exception.isPresent() )
+            final List<EditSectionsResult> exceptionResults = results.get( false );
+
+            if ( exceptionResults != null && !exceptionResults.isEmpty() )
             {
-                throw new IOException( getMessage( exception.get() ), exception.get() );
+                throw exceptionResults.get( 0 ).ioException;
             }
         }
     }
@@ -365,7 +375,10 @@ public class SectionEditor extends LineEditor
         }
 
         buffer.append( section.getHeadContent() );
-        section.getSections().parallelStream().forEachOrdered( s  -> renderSections( s, buffer ) );
+        try ( final Stream<Section> s1 = section.getSections().parallelStream() )
+        {
+            s1.forEachOrdered( s  -> renderSections( s, buffer ) );
+        }
         buffer.append( section.getTailContent() );
 
         if ( section.getEndingLine() != null )
@@ -380,16 +393,6 @@ public class SectionEditor extends LineEditor
     {
         return MessageFormat.format( ResourceBundle.getBundle( SectionEditor.class.getName() ).getString( key ),
                                      arguments );
-
-    }
-
-    private static String getMessage( final Throwable t )
-    {
-        return t != null
-                   ? t.getMessage() != null && t.getMessage().trim().length() > 0
-                         ? t.getMessage()
-                         : getMessage( t.getCause() )
-                   : null;
 
     }
 

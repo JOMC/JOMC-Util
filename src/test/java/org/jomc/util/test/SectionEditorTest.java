@@ -186,7 +186,9 @@ public class SectionEditorTest extends LineEditorTest
             stream.forEach( i  ->
             {
                 testNoSections.append( "Hello editor.\n" );
-                expectedNoSections.append( "Hello editor." ).append( this.getLineEditor().getLineSeparator() );
+                expectedNoSections.append(
+                    new StringBuilder( "Hello editor." ).append( this.getLineEditor().getLineSeparator() ) );
+
             } );
         }
 

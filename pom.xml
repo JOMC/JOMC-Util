@@ -90,5 +90,6 @@
   </distributionManagement>
   <properties>
     <jomc.module.name>org.jomc.util</jomc.module.name>
+    <maven.surefire.memory>128m</maven.surefire.memory>
   </properties>
 </project>

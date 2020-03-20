@@ -226,30 +226,34 @@ public class Section
 
     private Section getSection( final Section current, final String sectionName )
     {
+        Section section = null;
+
         if ( sectionName.equals( current.getName() ) )
         {
-            return current;
+            section = current;
         }
 
-        for ( final Section child : current.getSections() )
+        if ( section == null )
         {
-            if ( sectionName.equals( child.getName() ) )
+            for ( final Section child : current.getSections() )
             {
-                return child;
-            }
-
-            if ( child.getName() == null )
-            {
-                final Section section = child.getSection( sectionName );
-
-                if ( section != null )
+                if ( sectionName.equals( child.getName() ) )
                 {
-                    return section;
+                    section = child;
+                    break;
+                }
+
+                final Section s = child.getSection( sectionName );
+
+                if ( s != null )
+                {
+                    section = s;
+                    break;
                 }
             }
         }
 
-        return null;
+        return section;
     }
 
     /**

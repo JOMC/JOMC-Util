@@ -230,13 +230,13 @@ public class SectionEditorTest extends LineEditorTest
         this.assertUnmatchedSections( ABSOLUTE_RESOURCE_NAME_PREFIX + "MissingSectionStartTest.txt" );
         this.assertUnmatchedSections( ABSOLUTE_RESOURCE_NAME_PREFIX + "MissingSectionsStartTest.txt" );
 
-        final StringBuilder testNoSections = new StringBuilder( 14000 );
-        final StringBuilder expectedNoSections = new StringBuilder( 14000 );
+        final StringBuffer testNoSections = new StringBuffer( 14000000 );
+        final StringBuffer expectedNoSections = new StringBuffer( 14000000 );
 
-        for ( int i = 1000; i >= 0; i-- )
+        for ( int i = 1000000; i >= 0; i-- )
         {
             testNoSections.append( "Hello editor.\n" );
-            expectedNoSections.append( "Hello editor." ).append( this.getLineEditor().getLineSeparator() );
+            expectedNoSections.append( "Hello editor." + this.getLineEditor().getLineSeparator() );
         }
 
         assertEquals( expectedNoSections.toString(), this.getLineEditor().edit( testNoSections.toString() ) );

@@ -178,17 +178,15 @@ public class SectionEditorTest extends LineEditorTest
         this.assertUnmatchedSections( ABSOLUTE_RESOURCE_NAME_PREFIX + "MissingSectionStartTest.txt" );
         this.assertUnmatchedSections( ABSOLUTE_RESOURCE_NAME_PREFIX + "MissingSectionsStartTest.txt" );
 
-        final StringBuilder testNoSections = new StringBuilder( 14000 );
-        final StringBuilder expectedNoSections = new StringBuilder( 14000 );
+        final StringBuffer testNoSections = new StringBuffer( 14000000 );
+        final StringBuffer expectedNoSections = new StringBuffer( 14000000 );
 
-        try ( final IntStream stream = IntStream.range( 0, 1000 ).parallel().unordered() )
+        try ( final IntStream stream = IntStream.range( 0, 1000000 ).parallel().unordered() )
         {
             stream.forEach( i  ->
             {
                 testNoSections.append( "Hello editor.\n" );
-                expectedNoSections.append(
-                    new StringBuilder( "Hello editor." ).append( this.getLineEditor().getLineSeparator() ) );
-
+                expectedNoSections.append( "Hello editor." + this.getLineEditor().getLineSeparator() );
             } );
         }
 

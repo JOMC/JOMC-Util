@@ -230,10 +230,10 @@ public class SectionEditorTest extends LineEditorTest
         this.assertUnmatchedSections( ABSOLUTE_RESOURCE_NAME_PREFIX + "MissingSectionStartTest.txt" );
         this.assertUnmatchedSections( ABSOLUTE_RESOURCE_NAME_PREFIX + "MissingSectionsStartTest.txt" );
 
-        final StringBuffer testNoSections = new StringBuffer( 14000000 );
-        final StringBuffer expectedNoSections = new StringBuffer( 14000000 );
+        final StringBuffer testNoSections = new StringBuffer( 1400000 );
+        final StringBuffer expectedNoSections = new StringBuffer( 1400000 );
 
-        for ( int i = 1000000; i >= 0; i-- )
+        for ( int i = 100000; i >= 0; i-- )
         {
             testNoSections.append( "Hello editor.\n" );
             expectedNoSections.append( "Hello editor." + this.getLineEditor().getLineSeparator() );

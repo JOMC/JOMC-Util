@@ -87,7 +87,9 @@ public class SectionEditor extends LineEditor
      * The {@code ExecutorService} of the instance.
      *
      * @since 1.10
+     * @deprecated As of 2.0, replaced by parallel Java streams. This method will be removed in 2.0.
      */
+    @Deprecated
     private ExecutorService executorService;
 
     /**
@@ -138,7 +140,9 @@ public class SectionEditor extends LineEditor
      * @since 1.10
      *
      * @see #setExecutorService(java.util.concurrent.ExecutorService)
+     * @deprecated As of 2.0, replaced by parallel Java streams. This method will be removed in 2.0.
      */
+    @Deprecated
     public final ExecutorService getExecutorService()
     {
         return this.executorService;
@@ -158,7 +162,9 @@ public class SectionEditor extends LineEditor
      * @since 1.10
      *
      * @see #getExecutorService()
+     * @deprecated As of 2.0, replaced by parallel Java streams. This method will be removed in 2.0.
      */
+    @Deprecated
     public final void setExecutorService( final ExecutorService value )
     {
         this.executorService = value;

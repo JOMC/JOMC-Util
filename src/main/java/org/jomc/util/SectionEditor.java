@@ -87,7 +87,7 @@ public class SectionEditor extends LineEditor
      * The {@code ExecutorService} of the instance.
      *
      * @since 1.10
-     * @deprecated As of 2.0, replaced by parallel Java streams. This method will be removed in 2.0.
+     * @deprecated As of 2.0, replaced by parallel Java streams. This field will be removed in 2.0.
      */
     @Deprecated
     private ExecutorService executorService;

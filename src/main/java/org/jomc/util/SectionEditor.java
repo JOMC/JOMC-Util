@@ -32,13 +32,11 @@ package org.jomc.util;
 
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -288,36 +286,46 @@ public class SectionEditor extends LineEditor
     {
         this.editSection( Objects.requireNonNull( section, "section" ) );
 
-        try ( final Stream<Section> stream = section.getSections().parallelStream() )
+        try ( final Stream<Section> st0 = section.getSections().parallelStream().unordered() )
         {
-            final class EditSectionsResult
+            final class EditSectionsFailure extends RuntimeException
             {
 
-                IOException ioException;
+                public EditSectionsFailure( final Throwable cause )
+                {
+                    super( cause );
+                }
+
+                void propagate() throws IOException
+                {
+                    if ( this.getCause() instanceof IOException )
+                    {
+                        throw new IOException( this.getCause().getMessage(), this.getCause() );
+                    }
+
+                    throw new AssertionError( this );
+                }
 
             }
 
-            final Map<Boolean, List<EditSectionsResult>> results = stream.map( s  ->
+            try
             {
-                final EditSectionsResult r = new EditSectionsResult();
-
-                try
+                st0.forEach( s  ->
                 {
-                    editSections( s );
-                }
-                catch ( final IOException e )
-                {
-                    r.ioException = e;
-                }
-
-                return r;
-            } ).collect( Collectors.groupingBy( r  -> r.ioException == null ) );
-
-            final List<EditSectionsResult> exceptionResults = results.get( false );
-
-            if ( exceptionResults != null && !exceptionResults.isEmpty() )
+                    try
+                    {
+                        editSections( s );
+                    }
+                    catch ( final IOException e )
+                    {
+                        throw new EditSectionsFailure( e );
+                    }
+                } );
+            }
+            catch ( final EditSectionsFailure e )
             {
-                throw exceptionResults.get( 0 ).ioException;
+                e.propagate();
+                throw new AssertionError( e );
             }
         }
     }
@@ -375,10 +383,11 @@ public class SectionEditor extends LineEditor
         }
 
         buffer.append( section.getHeadContent() );
-        try ( final Stream<Section> s1 = section.getSections().parallelStream() )
+        try ( final Stream<Section> st0 = section.getSections().parallelStream() )
         {
-            s1.forEachOrdered( s  -> renderSections( s, buffer ) );
+            st0.forEachOrdered( s  -> renderSections( s, buffer ) );
         }
+
         buffer.append( section.getTailContent() );
 
         if ( section.getEndingLine() != null )

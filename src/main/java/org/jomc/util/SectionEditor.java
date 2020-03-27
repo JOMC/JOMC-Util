@@ -296,16 +296,6 @@ public class SectionEditor extends LineEditor
                     super( cause );
                 }
 
-                void propagate() throws IOException
-                {
-                    if ( this.getCause() instanceof IOException )
-                    {
-                        throw new IOException( this.getCause().getMessage(), this.getCause() );
-                    }
-
-                    throw new AssertionError( this );
-                }
-
             }
 
             try
@@ -324,7 +314,11 @@ public class SectionEditor extends LineEditor
             }
             catch ( final EditSectionsFailure e )
             {
-                e.propagate();
+                if ( e.getCause() instanceof IOException )
+                {
+                    throw new IOException( e.getCause().getMessage(), e.getCause() );
+                }
+
                 throw new AssertionError( e );
             }
         }

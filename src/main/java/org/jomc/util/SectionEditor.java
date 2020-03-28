@@ -141,8 +141,11 @@ public class SectionEditor extends LineEditor
                 if ( current.getMode() == Section.MODE_TAIL && current.getTailContent().length() > 0 )
                 {
                     final Section s = new Section();
-                    s.getHeadContent().append( current.getTailContent() );
-                    current.getTailContent().setLength( 0 );
+                    s.setHeadContent(
+                        new StringBuilder( s.getHeadContent().length() + current.getTailContent().length() ).
+                            append( s.getHeadContent() ).append( current.getTailContent() ).toString() );
+
+                    current.setTailContent( null );
                     current.getSections().add( s );
                     current = s;
                     this.stack.push( current );
@@ -173,11 +176,21 @@ public class SectionEditor extends LineEditor
                 switch ( current.getMode() )
                 {
                     case Section.MODE_HEAD:
-                        current.getHeadContent().append( line ).append( this.getLineSeparator() );
+                        current.setHeadContent( new StringBuilder( current.getHeadContent().length()
+                                                                       + line.length()
+                                                                       + this.getLineSeparator().length() ).
+                            append( current.getHeadContent() ).append( line ).append( this.getLineSeparator() ).
+                            toString() );
+
                         break;
 
                     case Section.MODE_TAIL:
-                        current.getTailContent().append( line ).append( this.getLineSeparator() );
+                        current.setTailContent( new StringBuilder( current.getTailContent().length()
+                                                                       + line.length()
+                                                                       + this.getLineSeparator().length() ).
+                            append( current.getTailContent() ).append( line ).append( this.getLineSeparator() ).
+                            toString() );
+
                         break;
 
                     default:

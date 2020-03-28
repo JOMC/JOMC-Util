@@ -30,8 +30,9 @@
  */
 package org.jomc.util;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Section of text.
@@ -60,32 +61,32 @@ public class Section
     /**
      * The name of this section.
      */
-    private String name;
+    private volatile String name;
 
     /**
      * The parsed head content of this section.
      */
-    private StringBuilder headContent;
+    private volatile CharSequence headContent;
 
     /**
      * The parsed tail content of this section.
      */
-    private StringBuilder tailContent;
+    private volatile CharSequence tailContent;
 
     /**
      * Line marking the start of this section.
      */
-    private String startingLine;
+    private volatile String startingLine;
 
     /**
      * Line marking the end of this section.
      */
-    private String endingLine;
+    private volatile String endingLine;
 
     /**
      * The child sections of this section.
      */
-    private List<Section> sections;
+    private volatile List<Section> sections;
 
     /**
      * Creates a new {@code Section} instance.
@@ -160,14 +161,25 @@ public class Section
      *
      * @return The content of this section preceding any child section content.
      */
-    public StringBuilder getHeadContent()
+    public CharSequence getHeadContent()
     {
         if ( this.headContent == null )
         {
-            this.headContent = new StringBuilder( 512 );
+            this.headContent = "";
         }
 
         return this.headContent;
+    }
+
+    /**
+     * Sets the content of this section preceding any child section content.
+     *
+     * @param content The new content of this section preceding any child section content or {@code null}.
+     * @since 2.0.0
+     */
+    public void setHeadContent( final CharSequence content )
+    {
+        this.headContent = content;
     }
 
     /**
@@ -175,14 +187,25 @@ public class Section
      *
      * @return The content of this section succeeding any child section content.
      */
-    public StringBuilder getTailContent()
+    public CharSequence getTailContent()
     {
         if ( this.tailContent == null )
         {
-            this.tailContent = new StringBuilder( 512 );
+            this.tailContent = "";
         }
 
         return this.tailContent;
+    }
+
+    /**
+     * Sets the content of this section succeeding any child section content.
+     *
+     * @param content The new content of this section succeeding any child section content or {@code null}.
+     * @since 2.0.0
+     */
+    public void setTailContent( final CharSequence content )
+    {
+        this.tailContent = content;
     }
 
     /**
@@ -199,7 +222,7 @@ public class Section
     {
         if ( this.sections == null )
         {
-            this.sections = new ArrayList<>();
+            this.sections = new CopyOnWriteArrayList<>();
         }
 
         return this.sections;
@@ -216,12 +239,7 @@ public class Section
      */
     public Section getSection( final String sectionName )
     {
-        if ( sectionName == null )
-        {
-            throw new NullPointerException( "sectionName" );
-        }
-
-        return this.getSection( this, sectionName );
+        return this.getSection( this, Objects.requireNonNull( sectionName, "sectionName" ) );
     }
 
     private Section getSection( final Section current, final String sectionName )

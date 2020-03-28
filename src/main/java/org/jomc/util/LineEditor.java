@@ -48,7 +48,7 @@ public class LineEditor
     /**
      * Editor to chain.
      */
-    private LineEditor editor;
+    private final LineEditor editor;
 
     /**
      * Line separator.

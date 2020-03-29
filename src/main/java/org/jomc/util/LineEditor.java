@@ -33,6 +33,8 @@ package org.jomc.util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Interface to line based editing.
@@ -138,66 +140,66 @@ public class LineEditor
      * occurrence. On end of input, method {@code editLine} is called with a {@code null} argument.
      * </p>
      *
-     * @param text The text to edit or {@code null}.
+     * @param text The text to edit.
      *
-     * @return The edited text or {@code null}.
+     * @return The output of the editor or no value, if the editor did not produce output.
      *
+     * @throws NullPointerException if {@code text} is {@code null}.
      * @throws IOException if editing fails.
      */
-    public final String edit( final String text ) throws IOException
+    public final Optional<String> edit( final String text ) throws IOException
     {
-        String edited = text;
+        String edited = Objects.requireNonNull( text, "text" );
         this.lineNumber = 0L;
 
-        if ( edited != null )
-        {
-            final StringBuilder buf = new StringBuilder( edited.length() + 16 );
-            boolean appended = false;
+        final StringBuilder buf = new StringBuilder( edited.length() + 16 );
+        boolean appended = false;
 
-            if ( edited.length() > 0 )
+        if ( edited.length() > 0 )
+        {
+            try ( final BufferedReader reader = new BufferedReader( new StringReader( edited ) ) )
             {
-                try ( final BufferedReader reader = new BufferedReader( new StringReader( edited ) ) )
+                String line;
+                while ( ( line = reader.readLine() ) != null )
                 {
-                    String line;
-                    while ( ( line = reader.readLine() ) != null )
+                    this.lineNumber++;
+                    final String replacement = this.editLine( line );
+                    if ( replacement != null )
                     {
-                        this.lineNumber++;
-                        final String replacement = this.editLine( line );
-                        if ( replacement != null )
-                        {
-                            buf.append( replacement ).append( this.getLineSeparator() );
-                            appended = true;
-                        }
+                        buf.append( replacement ).append( this.getLineSeparator() );
+                        appended = true;
                     }
                 }
             }
-            else
-            {
-                this.lineNumber++;
-                final String replacement = this.editLine( edited );
-                if ( replacement != null )
-                {
-                    buf.append( replacement ).append( this.getLineSeparator() );
-                    appended = true;
-                }
-            }
-
-            final String replacement = this.editLine( null );
+        }
+        else
+        {
+            this.lineNumber++;
+            final String replacement = this.editLine( edited );
             if ( replacement != null )
             {
-                buf.append( replacement );
+                buf.append( replacement ).append( this.getLineSeparator() );
                 appended = true;
             }
-
-            edited = appended ? buf.toString() : null;
         }
+
+        final String replacement = this.editLine( null );
+        if ( replacement != null )
+        {
+            buf.append( replacement );
+            appended = true;
+        }
+
+        edited = appended ? buf.toString() : null;
+
+        Optional<String> output = Optional.ofNullable( edited );
 
         if ( this.editor != null )
         {
-            edited = this.editor.edit( edited );
+            output = this.editor.edit( edited );
         }
 
-        return edited;
+        return output;
     }
 
     /**

@@ -99,12 +99,17 @@ public class SectionEditorTest extends LineEditorTest
 
                 if ( section.getName() != null )
                 {
-                    section.getHeadContent().append( section.getName() ).append( " Head" ).
-                        append( this.getLineSeparator() );
+                    synchronized ( section.getHeadContent() )
+                    {
+                        section.getHeadContent().append( section.getName() ).append( " Head" ).
+                            append( this.getLineSeparator() );
+                    }
 
-                    section.getTailContent().append( section.getName() ).append( " Tail" ).
-                        append( this.getLineSeparator() );
-
+                    synchronized ( section.getTailContent() )
+                    {
+                        section.getTailContent().append( section.getName() ).append( " Tail" ).
+                            append( this.getLineSeparator() );
+                    }
                 }
             }
 

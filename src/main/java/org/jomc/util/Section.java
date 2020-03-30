@@ -30,8 +30,8 @@
  */
 package org.jomc.util;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Section of text.
@@ -60,32 +60,32 @@ public class Section
     /**
      * The name of this section.
      */
-    private String name;
+    private volatile String name;
 
     /**
      * The parsed head content of this section.
      */
-    private StringBuilder headContent;
+    private volatile StringBuilder headContent;
 
     /**
      * The parsed tail content of this section.
      */
-    private StringBuilder tailContent;
+    private volatile StringBuilder tailContent;
 
     /**
      * Line marking the start of this section.
      */
-    private String startingLine;
+    private volatile String startingLine;
 
     /**
      * Line marking the end of this section.
      */
-    private String endingLine;
+    private volatile String endingLine;
 
     /**
      * The child sections of this section.
      */
-    private List<Section> sections;
+    private volatile List<Section> sections;
 
     /**
      * Creates a new {@code Section} instance.
@@ -199,7 +199,7 @@ public class Section
     {
         if ( this.sections == null )
         {
-            this.sections = new ArrayList<Section>();
+            this.sections = new CopyOnWriteArrayList<Section>();
         }
 
         return this.sections;

@@ -34,8 +34,9 @@ import org.jomc.util.LineEditor;
 import org.jomc.util.test.support.NullEditor;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 /**
  * Test cases for class {@code org.jomc.util.LineEditor}.
@@ -145,30 +146,39 @@ public class LineEditorTest
     @Test
     public final void testLineEditor() throws Exception
     {
-        assertEquals( this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "" ) );
+        assertEquals( this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "" ).get() );
         assertEquals( 1, this.getLineEditor().getLineNumber() );
+
         assertEquals( "NO LINE SEPARATOR" + this.getLineEditor().getLineSeparator(),
-                      this.getLineEditor().edit( "NO LINE SEPARATOR" ) );
+                      this.getLineEditor().edit( "NO LINE SEPARATOR" ).get() );
 
         assertEquals( 1, this.getLineEditor().getLineNumber() );
-        assertEquals( this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "\n" ) );
+
+        assertEquals( this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "\n" ).get() );
         assertEquals( 1, this.getLineEditor().getLineNumber() );
-        assertNull( this.getLineEditor().edit( null ) );
-        assertEquals( 0, this.getLineEditor().getLineNumber() );
+
+        try
+        {
+            this.getLineEditor().edit( null );
+            fail( "Expected 'NullPointerException' not thrown." );
+        }
+        catch ( final NullPointerException e )
+        {
+            assertNotNull( e.getMessage() );
+            System.out.println( e );
+        }
     }
 
     @Test
     public final void testLineEditorChain() throws Exception
     {
         final LineEditor chained = this.newLineEditor( new NullEditor() );
-        assertNull( chained.edit( "" ) );
+        assertFalse( chained.edit( "" ).isPresent() );
         assertEquals( 1, chained.getLineNumber() );
-        assertNull( chained.edit( "NO LINE SEPARATOR" ) );
+        assertFalse( chained.edit( "NO LINE SEPARATOR" ).isPresent() );
         assertEquals( 1, chained.getLineNumber() );
-        assertNull( chained.edit( "\n" ) );
+        assertFalse( chained.edit( "\n" ).isPresent() );
         assertEquals( 1, chained.getLineNumber() );
-        assertNull( chained.edit( null ) );
-        assertEquals( 0, chained.getLineNumber() );
     }
 
 }

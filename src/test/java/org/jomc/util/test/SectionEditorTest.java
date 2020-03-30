@@ -34,6 +34,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.util.Optional;
 import java.util.stream.IntStream;
 import org.apache.commons.io.IOUtils;
 import org.jomc.util.LineEditor;
@@ -124,16 +125,16 @@ public class SectionEditorTest extends LineEditorTest
         String expected =
             convertLineSeparator( this.getResource( ABSOLUTE_RESOURCE_NAME_PREFIX + "TestSectionsEdited.txt" ) );
 
-        String edited = this.getLineEditor().edit( test );
+        Optional<String> edited = this.getLineEditor().edit( test );
 
         System.out.println( "TEST:" );
         System.out.println( test );
         System.out.println( "EXPECTED:" );
         System.out.println( expected );
         System.out.println( "EDITED:" );
-        System.out.println( edited );
+        System.out.println( edited.get() );
 
-        assertEquals( expected, edited );
+        assertEquals( expected, edited.get() );
         assertTrue( this.getLineEditor().isSectionPresent( "1" ) );
         assertTrue( this.getLineEditor().isSectionPresent( "1.1" ) );
         assertTrue( this.getLineEditor().isSectionPresent( "1.1.1" ) );
@@ -162,9 +163,9 @@ public class SectionEditorTest extends LineEditorTest
         System.out.println( "EXPECTED:" );
         System.out.println( expected );
         System.out.println( "EDITED:" );
-        System.out.println( edited );
+        System.out.println( edited.get() );
 
-        assertEquals( expected, edited );
+        assertEquals( expected, edited.get() );
         assertTrue( this.getLineEditor().isSectionPresent( "1" ) );
         assertTrue( this.getLineEditor().isSectionPresent( "1.1" ) );
         assertTrue( this.getLineEditor().isSectionPresent( "1.1.1" ) );
@@ -190,7 +191,7 @@ public class SectionEditorTest extends LineEditorTest
             } );
         }
 
-        assertEquals( expectedNoSections.toString(), this.getLineEditor().edit( testNoSections.toString() ) );
+        assertEquals( expectedNoSections.toString(), this.getLineEditor().edit( testNoSections.toString() ).get() );
 
         try
         {

@@ -82,9 +82,9 @@ public class TrailingWhitespaceEditorTest extends LineEditorTest
     @Test
     public final void testTrailingWhitespaceEditor() throws Exception
     {
-        assertEquals( this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "\t     " ) );
-        assertEquals( this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "\t     \n" ) );
-        assertEquals( "   X" + this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "   X " ) );
+        assertEquals( this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "\t     " ).get() );
+        assertEquals( this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "\t     \n" ).get() );
+        assertEquals( "   X" + this.getLineEditor().getLineSeparator(), this.getLineEditor().edit( "   X " ).get() );
     }
 
 }

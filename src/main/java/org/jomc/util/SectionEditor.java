@@ -329,7 +329,7 @@ public class SectionEditor extends LineEditor
             {
                 if ( e.getCause() instanceof IOException )
                 {
-                    throw new IOException( e.getCause().getMessage(), e.getCause() );
+                    throw (IOException) e.getCause();
                 }
 
                 throw new AssertionError( e );

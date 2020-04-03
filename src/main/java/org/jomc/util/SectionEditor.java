@@ -304,9 +304,22 @@ public class SectionEditor extends LineEditor
             final class EditSectionsFailure extends RuntimeException
             {
 
-                public EditSectionsFailure( final Throwable cause )
+                EditSectionsFailure( final Throwable cause )
                 {
-                    super( cause );
+                    super( Objects.requireNonNull( cause, "cause" ) );
+                }
+
+                <T extends Exception> void handleCause( final Class<T> cause ) throws T
+                {
+                    if ( this.getCause().getClass().isAssignableFrom( Objects.requireNonNull( cause, "cause" ) ) )
+                    {
+                        throw (T) this.getCause();
+                    }
+                }
+
+                Error unhandledCauseError()
+                {
+                    return new AssertionError( this.getCause() );
                 }
 
             }
@@ -325,14 +338,10 @@ public class SectionEditor extends LineEditor
                     }
                 } );
             }
-            catch ( final EditSectionsFailure e )
+            catch ( final EditSectionsFailure f )
             {
-                if ( e.getCause() instanceof IOException )
-                {
-                    throw (IOException) e.getCause();
-                }
-
-                throw new AssertionError( e );
+                f.handleCause( IOException.class );
+                throw f.unhandledCauseError();
             }
         }
     }
